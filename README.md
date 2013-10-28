@@ -1,6 +1,6 @@
 DigiTecK3D Procedural Shader Library
 =====================================================================================
-Copyright (c) 2013 DigiTecK3D. All Rights Reserved. ### H3
+Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
                       	
 Author: Miguel A Santiago Jr.       	
 Web: www.digiteck3d.com				
