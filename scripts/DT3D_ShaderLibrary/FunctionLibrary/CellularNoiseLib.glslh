@@ -1,0 +1,30 @@
+////////////////////////////////////////////////////////////////////////////////
+// DigiTecK3D Procedural Shader Library Registration
+// Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
+//////////////////////////////////////////////////////////////////////////////// 
+// File: CellularNoiseLib.glslh	
+// Description: Cellular noise library for the cellular noise funciton.
+////////////////////////////////////////////////////////////////////////////////               	
+// Author: Miguel A Santiago Jr.       	
+// Web: www.digiteck3d.com				
+// Email: miguel@digiteck3d.com
+////////////////////////////////////////////////////////////////////////////////			                                   	
+// Date: Oct 15, 2013	         		
+////////////////////////////////////////////////////////////////////////////////
+// This program is free software: you can redistribute it and/or modify		
+// it under the terms of the GNU General Public License as published by		
+// the Free Software Foundation, either version 3 of the License, or		
+// (at your option) any later version.										
+//																			
+// This program is distributed in the hope that it will be useful,			
+// but WITHOUT ANY WARRANTY; without even the implied warranty of			
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the			
+// GNU General Public License for more details.								
+//																			
+// You should have received a copy of the GNU General Public License		
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.	
+////////////////////////////////////////////////////////////////////////////////
+
+// voronoi cellular pattern
+vec4 DT3D_CellularNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, float jitter, float stepSize, 
+						float threshold, bool invert, int outSet, int distSet, int modSet);

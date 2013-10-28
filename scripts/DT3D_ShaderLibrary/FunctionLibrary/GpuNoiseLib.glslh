@@ -1,0 +1,107 @@
+////////////////////////////////////////////////////////////////////////////////
+// DigiTecK3D Procedural Shader Library Registration
+// Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
+//////////////////////////////////////////////////////////////////////////////// 
+// File: GputNoiseLib.glslh	
+// Description: Modified Gpu Noise library from Brian Sharpe for the procedurals.
+////////////////////////////////////////////////////////////////////////////////               	
+// Author: Miguel A Santiago Jr.       	
+// Web: www.digiteck3d.com				
+// Email: miguel@digiteck3d.com
+////////////////////////////////////////////////////////////////////////////////			                                   	
+// Date: Oct 15, 2013	         		
+////////////////////////////////////////////////////////////////////////////////
+// This program is free software: you can redistribute it and/or modify		
+// it under the terms of the GNU General Public License as published by		
+// the Free Software Foundation, either version 3 of the License, or		
+// (at your option) any later version.										
+//																			
+// This program is distributed in the hope that it will be useful,			
+// but WITHOUT ANY WARRANTY; without even the implied warranty of			
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the			
+// GNU General Public License for more details.								
+//																			
+// You should have received a copy of the GNU General Public License		
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.	
+////////////////////////////////////////////////////////////////////////////////
+// Credit Author: Brian Sharpe
+// Credit License: Ghetto License
+////////////////////////////////////////////////////////////////////////////////
+//	Code repository for GPU noise development blog
+//	http://briansharpe.wordpress.com
+//	https://github.com/BrianSharpe
+//
+//	I'm not one for copywrites.  Use the code however you wish.
+//	All I ask is that credit be given back to the blog or myself when appropriate.
+//	And also to let me know if you come up with any changes, improvements, thoughts 
+//  or interesting uses for this stuff. :) Thanks!
+//
+//	Brian Sharpe
+//	brisharpe CIRCLE_A yahoo DOT com
+//	http://briansharpe.wordpress.com
+//	https://github.com/BrianSharpe
+////////////////////////////////////////////////////////////////////////////////
+
+//   Generate grid cells random noise
+//	 returns value random cell values
+//
+vec4 CellNoise( vec3 gridcell );   
+
+//	 Value Noise 3D
+//   Return value range of -1.0->1.0
+//   http://briansharpe.files.wordpress.com/2011/11/valuesample1.jpg
+//
+float Value3D( vec3 P );
+
+//
+//   Perlin Noise 3D  ( gradient noise )
+//   Return value range of -1.0->1.0
+//   http://briansharpe.files.wordpress.com/2011/11/perlinsample.jpg
+//
+float Perlin3D( vec3 P );
+
+//
+//   SimplexPerlin3D  ( simplex gradient noise )
+//   Perlin noise over a simplex (tetrahedron) grid
+//   Return value range of -1.0->1.0
+//   http://briansharpe.files.wordpress.com/2012/01/simplexperlinsample.jpg
+//
+//   Implementation originally based off Stefan Gustavson's and Ian McEwan's work at...
+//   http://github.com/ashima/webgl-noise
+//
+float SimplexPerlin3D(vec3 P);
+
+//
+//   Hermite3D
+//   Return value range of -1.0->1.0
+//   http://briansharpe.files.wordpress.com/2012/01/hermitesample.jpg
+//
+float Hermite3D( vec3 P );
+
+//
+//   Value3D_Deriv
+//   Value3D noise with derivatives
+//   returns vec3( value, xderiv, yderiv, zderiv )
+//
+vec4 Value3D_Deriv( vec3 P );
+
+//
+//   PerlinSurflet3D_Deriv
+//   Perlin Surflet 3D noise with derivatives
+//   returns vec4( value, xderiv, yderiv, zderiv )
+//
+vec4 PerlinSurflet3D_Deriv( vec3 P );
+
+//
+//   Hermite3D_Deriv
+//   Hermite3D noise with derivatives
+//   returns vec3( value, xderiv, yderiv, zderiv )
+//
+vec4 Hermite3D_Deriv( vec3 P );
+
+//
+//   Noise type picker function
+//   Noise is all returned in signed form -1,1
+//   returns type = 0:value,1:perlin,2:simplex,3:hermite
+//
+float NoiseType(vec3 p, int type);

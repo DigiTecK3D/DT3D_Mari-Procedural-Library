@@ -1,0 +1,45 @@
+<Node>
+  <ID>DT3D_PerlinNoise</ID>
+    <Inputs>
+        <Input Name="Input"></Input>
+    </Inputs>
+    <Attributes>
+		<Attribute Name="colorA" PrettyName="Color A" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(0,0,0,1)</Attribute>
+		<Attribute Name="colorB" PrettyName="Color B" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(1,1,1,1)</Attribute>
+		<Attribute Name="frequency" PrettyName="Frequency" Group="Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
+		<Attribute Name="noiseType" PrettyName="Noise Type" Group="Modifiers" Type="stringlist">Perlin,Value,Perlin,Simplex</Attribute>
+		<Attribute Name="threshold" PrettyName="Threshold" Group="Modifiers" Type="float" Min="0" Max="1" Logarithmic="1">0</Attribute>
+		<Attribute Name="invert" PrettyName="Invert" Group="Modifiers" Type="bool" Min="false" Max="true">false</Attribute>
+		<!--<Attribute Name="transX" PrettyName="TranslateX" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>-->
+		<!--<Attribute Name="transY" PrettyName="TranslateY" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>-->
+		<!--<Attribute Name="transZ" PrettyName="TranslateZ" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>-->
+		<Attribute Name="rotateX" PrettyName="Rotate X" Group="Transform Rotate" Type="float" Min="0" Max="360" Logarithmic="1">0</Attribute>
+		<Attribute Name="rotateY" PrettyName="Rotate Y" Group="Transform Rotate" Type="float" Min="0" Max="360" Logarithmic="1">0</Attribute>
+		<Attribute Name="rotateZ" PrettyName="Rotate Z" Group="Transform Rotate" Type="float" Min="0" Max="360" Logarithmic="1">0</Attribute>
+		<Attribute Name="scaleX" PrettyName="Scale X" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
+		<Attribute Name="scaleY" PrettyName="Scale Y" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
+		<Attribute Name="scaleZ" PrettyName="Scale Z" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
+    </Attributes>
+  <Contexts>
+    <Context Type="GLSL">
+        <Shader>
+            <Inputs>
+                <Input Name="Input"><Default>vec4(1,1,1,1)</Default></Input>
+            </Inputs>
+            <Body><![CDATA[
+			
+			// build the needed vector attributes for position transform
+			vec3 trans = vec3(0,0,0); vec3 rotate = vec3($rotateX,$rotateY,$rotateZ);
+			vec3 scale = vec3($scaleX,$scaleY,$scaleZ);
+			
+			// transform the position to translate,rotate,scale the position
+			vec3 P = positionTransform(State.Position,trans,rotate,scale);
+			
+			// perlin noise function
+            Output = DT3D_PerlinNoise(P,$colorA,$colorB,$frequency,$threshold,$invert,1,$noiseType);
+			
+            ]]></Body>
+        </Shader>
+    </Context>
+  </Contexts>
+</Node>

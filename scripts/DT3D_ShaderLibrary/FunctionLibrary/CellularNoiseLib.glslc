@@ -1,0 +1,265 @@
+#version 330
+#extension GL_EXT_gpu_shader4 : enable
+
+////////////////////////////////////////////////////////////////////////////////
+// DigiTecK3D Procedural Shader Library Registration
+// Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
+//////////////////////////////////////////////////////////////////////////////// 
+// File: CellularNoiseLib.glslc	
+// Description: Cellular noise library for the cellular noise funciton.
+////////////////////////////////////////////////////////////////////////////////               	
+// Author: Miguel A Santiago Jr.       	
+// Web: www.digiteck3d.com				
+// Email: miguel@digiteck3d.com
+////////////////////////////////////////////////////////////////////////////////			                                   	
+// Date: Oct 15, 2013	         		
+////////////////////////////////////////////////////////////////////////////////
+// This program is free software: you can redistribute it and/or modify		
+// it under the terms of the GNU General Public License as published by		
+// the Free Software Foundation, either version 3 of the License, or		
+// (at your option) any later version.										
+//																			
+// This program is distributed in the hope that it will be useful,			
+// but WITHOUT ANY WARRANTY; without even the implied warranty of			
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the			
+// GNU General Public License for more details.								
+//																			
+// You should have received a copy of the GNU General Public License		
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.	
+////////////////////////////////////////////////////////////////////////////////
+
+// forward declarations from other include functions
+//
+// threshold function for the givin value
+float pxslThreshold(float threshold, float value);
+//
+// a anti-aliased version of step for procedurals  
+// 'threshold' is constant , 'value' is smoothly varying
+float aastep(float threshold , float value);
+
+// random float generator [0,1]
+float rnd_1d(vec2 x)
+{
+	uint n = floatBitsToUint(x.y * 214013.0 + x.x * 2531011.0);
+	n = n * (n * n * 15731u + 789221u);
+	n = (n >> 9u) | 0x3F800000u;
+
+	return 2.0 - uintBitsToFloat(n);
+}
+
+// distance squared
+float dist_Squared(float x, float y, float z)
+{
+	return (x * x + y * y + z * z);
+}
+
+// real distance
+float dist_Real(float x, float y, float z)
+{
+	return sqrt(x * x + y * y + z * z);
+}
+
+// quadratic distance
+float dist_Quadratic(float x, float y, float z)
+{
+	return (x * x + y * y + z * z + x * y + x * z + y * z);
+}
+
+// manhattan/taxicab/cityblock distance
+float dist_Manhattan(float x, float y, float z)
+{
+	return (abs(x) + abs(y) + abs(z));
+}
+
+// chebychev
+float dist_Chebychev(float x, float y, float z)
+{
+	float t;
+
+	x = abs(x);
+	y = abs(y);
+	z = abs(z);
+	t = (x > y) ? x : y;
+	return ((z > t) ? z : t);
+}
+
+// minkowski preset exponent 0.5
+float dist_MinkovskyH(float x, float y, float z)
+{
+	float d = sqrt(abs(x)) + sqrt(abs(y)) + sqrt(abs(z));
+	return (d * d);
+}
+
+// minkowski preset exponent 4
+float dist_Minkovsky4(float x, float y, float z)
+{
+	x *= x;
+	y *= y;
+	z *= z;
+	return sqrt(sqrt(x * x + y * y + z * z));
+}
+
+// minkowski, general case, slow, maybe too slow to be useful
+// exp = 0.5f MinkovskyH, exp = 1.0f Manhattan, exp = 2.3f Squared
+// exp = 4.0f Minkovsky4, exp = 20.0f Chebychev  
+float dist_Minkovsky(float x, float y, float z, float e)
+{
+	return pow(pow(abs(x), e) + pow(abs(y), e) + pow(abs(z), e), 1.0f / e);
+}
+
+// signed value of input
+float signedValue(float f2f1)
+{
+	float g = 2.0f * f2f1 - 1.0f;
+	return g;
+}
+
+// cosine value of input
+float cosineValue(float f2f1)
+{
+	float g = cos(sqrt(f2f1));
+	return g;
+}
+
+// voronoi outline crack pattern
+float voronoiStep(float f2f1, float stepsize, vec3 pos1, vec3 pos2, vec3 pp)     
+{
+	float scalefactor = distance(pos1,pos2) / (distance(pos1,pp)+distance(pos2,pp));
+	//float g = step(stepsize*scalefactor, f2f1);
+	float g = aastep(stepsize*scalefactor, f2f1);	
+	return g;
+}
+			
+// voronoi cellular pattern generator
+void voronoi(vec3 position, float jitterD=.9, int distype = 0, out float f1, out float f2, out vec3 pos1, out vec3 pos2, out vec3 f1cell, out vec3 f2cell)  
+{  
+	vec3 thiscell = floor(position)+0.5f;  
+	f1 = f2 = 1000; pos1 = pos2 = vec3(0,0,0); 
+	float i, j, k, dist;  
+
+	vec3 c;  
+	for(i = -1; i <= 1; i += 1)  
+	{  
+		for(j = -1; j <= 1; j += 1)  
+		{  
+			for(k = -1; k <= 1; k += 1)  
+			{  
+				vec3 testcell = thiscell  + vec3(i,j,k);  
+				vec3 randomUVW = testcell * vec3(0.037f, 0.119f, .093f);  
+				vec3 cellnoise = vec3(rnd_1d(randomUVW.xy+randomUVW.z+0.2),rnd_1d(randomUVW.xy+randomUVW.z+0.5),rnd_1d(randomUVW.xy+randomUVW.z+0.3)); 
+				vec3 pos = testcell + jitterD*(cellnoise-0.5);  
+				vec3 offset = pos - position;  
+				switch (distype) // distance functions
+				{
+					case 1:
+					dist = dist_Squared(offset.x,offset.y,offset.z);
+					break;
+					case 2:
+					dist = dist_Quadratic(offset.x,offset.y,offset.z);
+					break;
+					case 3:
+					dist = dist_Manhattan(offset.x,offset.y,offset.z);
+					break;
+					case 4:
+					dist = dist_Chebychev(offset.x,offset.y,offset.z);
+					break;
+					case 5:
+					dist = dist_MinkovskyH(offset.x,offset.y,offset.z);
+					break;
+					case 6:
+					dist = dist_Minkovsky4(offset.x,offset.y,offset.z);
+					break;
+					case 0:
+					default:
+					dist = dist_Real(offset.x,offset.y,offset.z);
+				}  
+				if(dist < f1) // f1 cell 
+				{  
+					f2 = f1;
+					f1 = dist; 
+					f1cell = cellnoise; 
+					pos2 = pos1;  
+					pos1 = pos;  
+				}  
+				else if(dist < f2) // f2 crease   
+				{  
+					f2 = dist; 
+					f2cell = cellnoise; 
+					pos2 = pos;  
+				}  
+			} 
+		}  
+	}  
+}
+
+// voronoi cellular pattern
+vec4 DT3D_CellularNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, float jitter, float stepSize, float threshold, bool invert, int outSet, int distSet, int modSet)
+{
+	// point position in object space
+	vec3 P = Po * frequency; 
+
+	// cell function outputs
+	float f1,f2; vec3 cellout, cellmod;
+	vec3 pos1,pos2,f1cell,f2cell;
+	// cellular function
+	voronoi(P,jitter,distSet,f1,f2,pos1,pos2,f1cell,f2cell);
+
+	switch (outSet) // output function 
+	{
+		case 1: // f2 crease 
+		cellout = vec3(f2);
+		break;
+		case 2: // f2-f1 crease-cell = cellular
+		cellout = vec3((f2-f1));
+		break;
+		case 3: // f1+f2 cell+crease
+		cellout = vec3((f1+f2)/2);
+		break;
+		case 4: // f1*f2 cell*crease
+		cellout = vec3((f1*f2));
+		break;
+		case 0: // f1 cell  
+		default:
+		cellout = vec3(f1);
+	}
+
+	switch (modSet) // mod function 
+	{
+		case 1: // signed value
+		cellmod = vec3(signedValue(cellout.x));
+		break;
+		case 2: // cosine value
+		cellmod = vec3(cosineValue(cellout.x));
+		break;
+		case 3: // step outline value
+		cellmod = vec3(voronoiStep(cellout.x,stepSize,pos1,pos2,P));
+		break;
+		case 0: // no mod default value  
+		default:
+		cellmod = cellout;
+	}
+
+	if(threshold > 0.0) // threshold 
+	{
+		switch(modSet) 
+		{
+			 case 3: // step outline no threshold
+			 cellmod.x = cellmod.x;
+			 break;
+			 case 0: // run threshold otherwise  
+			 default:
+			 cellmod.x = pxslThreshold(threshold,cellmod.x);
+		}
+	}
+
+	if(invert) // invert the result 
+	{
+		// invert the result
+		cellmod.x = 1.0 - cellmod.x;
+	}   
+
+	// final output color result
+	vec4 resultColor = mix( colorA, colorB, cellmod.x);
+
+	return resultColor;
+}
