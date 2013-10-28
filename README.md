@@ -23,14 +23,23 @@ If not, see <http://www.gnu.org/licenses/>.
 Info
 -----------------
 
-This is an implementation of the Worley cellular noise function normally found in all 
-CG procedural shading packages. The current implementation will output F1, F2, F2-F1, 
-F1*F2, and F1+F2/2. F1 or Feature 1 which are the cells and F2 or Feature 2 which are 
-the cell cracks. Along with the output type you can set the various distance types 
-associated with Voronoi diagram distance types. It supports the Real distance, 
-Squared distance, Manhattan distance, Chessboard distance, and the Chebychev distance 
-type. Its fully integrated into the blending modes of Mari so it can be blended down 
-into various other shader modules or even baked down into texture for output.
+This is a Mari procedural library that adds new procedural types like Cellular, Gabor, 
+Perlin, Value, Simplex, Brownian, Turbulence, Inigo Multi-Fractal, Ridged Fractal noise and 
+more planned for the future. This isn't simply just a shader library that adds new nodes 
+to Mari, but overall adds new functionality to the shader API that other shader writers 
+can access and modify to create there own shaders from the various new noise functions 
+added in code to the Mari shader API. Currently the library adds a totally new GPU 
+noise library from the great work of Brian Sharpe, which is far more efficient and accurate 
+than the standard noise library. This is the core of the library that allows to implement 
+various other standard noise functions that are normally found in basic procedural libraries. 
+The library also finally adds back in the full featured cellular noise function with various 
+feature sets to mimic organic cellular patterns. Along with these new additions the library 
+also introduces a port of the Gabor noise function into the library, This is a special type 
+of noise with anisotropic noise properties.
+
+Best of all the library will fall into the open source domain under the GNU General Public 
+License and will include all of the source code for you to modify, learn, or just continue 
+to improve and add to it yourself. So you are free to do with it what you will.
 
 Installation
 -----------------
