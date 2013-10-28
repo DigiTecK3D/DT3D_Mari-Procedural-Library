@@ -1,4 +1,5 @@
 DigiTecK3D Procedural Shader Library
+=====================================================================================
 Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
 =====================================================================================  
                       	
@@ -6,7 +7,8 @@ Author: Miguel A Santiago Jr.
 Web: www.digiteck3d.com				
 Email: miguel@digiteck3d.com
     		
-License: ============================================================================
+License
+============================================================================
 
 This program is free software: you can redistribute it and/or modify it under the terms 
 of the GNU General Public License as published by the Free Software Foundation, either 
@@ -19,7 +21,8 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with this program.  
 If not, see <http://www.gnu.org/licenses/>.
 
-Info: =============================================================================== 
+Info
+=============================================================================== 
 
 This is an implementation of the Worley cellular noise function normally found in all 
 CG procedural shading packages. The current implementation will output F1, F2, F2-F1, 
@@ -30,7 +33,8 @@ Squared distance, Manhattan distance, Chessboard distance, and the Chebychev dis
 type. Its fully integrated into the blending modes of Mari so it can be blended down 
 into various other shader modules or even baked down into texture for output.
 
-Installation: =======================================================================
+Installation
+=======================================================================
 
 Take scripts and put them into your user preference script directory. Or any startup
 script path that Mari has set. Once these are in place, Mari on startup will run through
@@ -42,12 +46,14 @@ Example:
 	• On Linux: /Mari/Scripts/
 	• On Windows: Documents/Mari/Scripts/	
 
-History: ============================================================================
+History
+============================================================================
 
 10/15/13
 -Initial release of the Mari Procedural Library.
 
-Credits: ============================================================================
+Credits
+============================================================================
 
 
  
