@@ -51,14 +51,18 @@ the console will allow you to see the modules loading up. This is where if in an
 the loading fails it will let you know. 
 
 Example:
-	• On Linux: /Mari/Scripts/
-	• On Windows: Documents/Mari/Scripts/	
+	ï¿½ On Linux: /Mari/Scripts/
+	ï¿½ On Windows: Documents/Mari/Scripts/	
 
 History
 -----------------
 
 10/15/13
 -Initial release of the Mari Procedural Library.
+
+11/15/13
+- Mofidications to Noises to cope with larger scene sizes
+- flow paintable gabor noise
 
 Credits
 -----------------
