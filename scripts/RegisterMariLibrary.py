@@ -79,7 +79,7 @@ def registerGaborNoiseShader():
 	"Register a new custom shader module that implements gabor noise"
 	# Register the code as a new custom shader module
 	try:
-		mari.gl_render.registerCustomProceduralLayerFromXMLFile("Procedural/DT3D/Gabor Noise",mari.resources.path(mari.resources.USER_SCRIPTS) + "/DT3D_ShaderLibrary/Nodes/GaborNoise.xml")
+		mari.gl_render.registerCustomAdjustmentLayerFromXMLFile("Procedural/DT3D/Gabor Noise",mari.resources.path(mari.resources.USER_SCRIPTS) + "/DT3D_ShaderLibrary/Nodes/GaborNoise.xml")
 		print 'Registered Shader Module : Gabor Noise'
 	except Exception as exc:
 		print 'Error Registering Shader Module : Gabor Noise : ' + str(exc)
