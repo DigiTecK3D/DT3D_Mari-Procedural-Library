@@ -1,0 +1,374 @@
+// ---------------------------------------------
+// ---------------------------------------------
+// OVERVIEW OVER CONTENTS OF MARI FUNCTION LIBRARY
+// Each Function has a short description, a reference to 
+// the source file it lives in and hints/descriptions
+// you might need to understand its functionality
+// ---------------------------------------------
+// ---------------------------------------------
+
+
+
+
+
+// ---------------------------------------------
+// ---------------------------------------------
+// Noise Functions
+// ---------------------------------------------
+// ---------------------------------------------
+
+
+//   GpuNoiseLib.glslc
+//   Noise type picker function
+//   Noise is all returned in signed form -1,1
+//   returns type = 0:value,1:perlin,2:simplex,3:hermite
+//
+float NoiseType(vec3 p, int type);
+
+
+//   GpuNoiseLib.glslc
+//	 Value Noise 3D
+//   Return value range of -1.0->1.0
+//   http://briansharpe.files.wordpress.com/2011/11/valuesample1.jpg
+//
+float Value3D( vec3 P );
+
+//   GpuNoiseLib.glslc
+//   Perlin Noise 3D  ( gradient noise )
+//   Return value range of -1.0->1.0
+//   http://briansharpe.files.wordpress.com/2011/11/perlinsample.jpg
+//
+float Perlin3D( vec3 P );
+
+
+//   GpuNoiseLib.glslc
+//   SimplexPerlin3D  ( simplex gradient noise )
+//   Perlin noise over a simplex (tetrahedron) grid
+//   Return value range of -1.0->1.0
+//   http://briansharpe.files.wordpress.com/2012/01/simplexperlinsample.jpg
+//
+//   Implementation originally based off Stefan Gustavson's and Ian McEwan's work at...
+//   http://github.com/ashima/webgl-noise
+//
+float SimplexPerlin3D(vec3 P);
+
+
+//   GpuNoiseLib.glslc
+//   Hermite3D
+//   Return value range of -1.0->1.0
+//   http://briansharpe.files.wordpress.com/2012/01/hermitesample.jpg
+//
+float Hermite3D( vec3 P );
+
+
+//   GpuNoiseLib.glslc
+//   Value3D_Deriv
+//   Value3D noise with derivatives
+//   returns vec3( value, xderiv, yderiv, zderiv )
+//
+vec4 Value3D_Deriv( vec3 P );
+
+
+//   GpuNoiseLib.glslc
+//   PerlinSurflet3D_Deriv
+//   Perlin Surflet 3D noise with derivatives
+//   returns vec4( value, xderiv, yderiv, zderiv )
+//
+vec4 PerlinSurflet3D_Deriv( vec3 P );
+
+
+//   GpuNoiseLib.glslc
+//   Hermite3D_Deriv
+//   Hermite3D noise with derivatives
+//   returns vec3( value, xderiv, yderiv, zderiv )
+//
+vec4 Hermite3D_Deriv( vec3 P );
+
+// DT3D_ProceduralLib.glslc
+// vector noise function range of -1.0->1.0
+vec3 vnoise(vec3 P);
+
+
+// DT3D_ProceduralLib.glslc
+// fractional Brownian motion
+// Inputs: 
+// p              position and approximate inter-pixel spacing
+// octaves        max # of octaves to calculate
+// lacunarity     frequency spacing between successive octaves
+// gain           scaling factor between successive octaves
+//
+float fBm(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5);
+
+
+// DT3D_ProceduralLib.glslc
+// turbulence 
+// Inputs: 
+// p              position and approximate inter-pixel spacing
+// octaves        max # of octaves to calculate
+// lacunarity     frequency spacing between successive octaves
+// gain           scaling factor between successive octaves
+//
+float turbulence(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5);
+
+
+// DT3D_ProceduralLib.glslc
+// perlin noise
+vec4 DT3D_PerlinNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, float threshold, bool invert, int unsign, int modSet);
+
+
+// DT3D_ProceduralLib.glslc
+// turbulence fractal noise
+vec4 DT3D_TurbNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert);
+
+
+// ID_ProceduralLib.glslc
+// vector-valued Perlin noise on 3-D domain.
+float vsnoise(vec3 p);
+
+
+// ID_ProceduralLib.glslc
+// The stuff that Ken Musgrave calls "VLNoise"
+float VLNoise (vec3 Pt, float scale);
+
+
+// DT3D_ProceduralLib.glslc
+// brownian fractal noise
+vec4 DT3D_fBmNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert);
+
+
+// ID_ProceduralLib.glslc
+// A Variation of FBM without hardcoded values and added functionality
+float rmfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float freqOffset);
+
+
+// ID_ProceduralLib.glslc
+// A Variation of FBM without hardcoded values and added functionality
+// Most incoming values are smoothed so this function is suitable for non-constant in-values.
+float smoothfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float freqOffset);
+
+
+// ID_ProceduralLib.glslc
+// A Variation of Vector FBM without hardcoded values and added functionality
+float rmVfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float scale, float freqOffset);
+
+
+// ID_ProceduralLib.glslc
+// A Variation of Vector FBM, generally with better performance but different results than rmVfbm
+float VLfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float scale);
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------------------------------------------
+// ---------------------------------------------
+// multiFractal Functions
+// ---------------------------------------------
+// ---------------------------------------------
+
+
+// DT3D_ProceduralLib.glslc
+// inigo multi-fractal
+// Inputs: 
+// p              position and approximate inter-pixel spacing
+// octaves        max # of octaves to calculate
+// lacunarity     frequency spacing between successive octaves
+// gain           scaling factor between successive octaves
+//
+float iqmf(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5);
+
+
+
+
+// DT3D_ProceduralLib.glslc
+// ridged multi-fractal
+// Inputs: 
+// p              position and approximate inter-pixel spacing
+// octaves        max # of octaves to calculate
+// lacunarity     frequency spacing between successive octaves
+// gain           scaling factor between successive octaves
+// offset         a factor to offset the octaves
+//
+float ridgedmf(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5, float offset = 1.0);
+
+
+// DT3D_ProceduralLib.glslc
+// inigo multi fractal noise
+vec4 DT3D_InigoNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert);
+
+// DT3D_ProceduralLib.glslc
+// ridged multi fractal noise
+vec4 DT3D_RidgedNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float offset, float threshold, bool invert);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------------------------------------------
+// ---------------------------------------------
+// Voronoi Functions
+// ---------------------------------------------
+// ---------------------------------------------
+
+// DT3D_ProceduralLib.glslc
+// CellularNoiseLib.glslc
+// voronoi cellular pattern
+vec4 DT3D_CellularNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, float jitter, float stepSize, 
+						float threshold, bool invert, int outSet, int distSet, int modSet);
+
+//   GpuNoiseLib.glslc
+//   Generate grid cells random noise
+//	 returns value random cell values
+//
+vec4 CellNoise( vec3 gridcell );  
+
+
+
+
+
+
+
+
+
+
+// ---------------------------------------------
+// ---------------------------------------------
+// Gabor Noise Functions
+// ---------------------------------------------
+// ---------------------------------------------
+
+// GaborNoiseLib.glslc
+// gabor noise function
+vec4 DT3D_GaborNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, vec3 orientation, 
+					 float bandwidth, float truncate, float impulses, int seeds, int typeSet);
+
+
+
+
+
+
+
+
+
+
+// ---------------------------------------------
+// ---------------------------------------------
+// Vector/Position Modification Functions
+// ---------------------------------------------
+// ---------------------------------------------
+
+// DT3D_ProceduralLib.glslc
+// translate the position point in xyz
+vec3 translate( vec3 P, vec3 trans);
+
+// DT3D_ProceduralLib.glslc
+// build a rotation matrix in the 
+// desired axis to multiply the position point 
+mat3 rotation(float angle, vec3 axis);
+
+// DT3D_ProceduralLib.glslc
+// scale the position point in xyz
+vec3 scale( vec3 P, vec3 scale);
+
+// DT3D_ProceduralLib.glslc
+// tranform the position with translate,scale,rotation 
+vec3 positionTransform(vec3 P, vec3 Trans, vec3 Rot, vec3 Scale);
+
+
+
+
+
+
+
+
+// ---------------------------------------------
+// ---------------------------------------------
+// Value Functions
+// ---------------------------------------------
+// ---------------------------------------------
+
+// DT3D_ProceduralLib.glslc
+// bias function on a givin value 
+float pxslBias( float bias, float value );
+
+// DT3D_ProceduralLib.glslc
+// gain function on a givin value
+float pxslGain( float gain, float value );
+
+// DT3D_ProceduralLib.glslc
+// threshold function for the givin value
+float pxslThreshold(float threshold, float value);
+
+
+// ID_ProceduralLib.glslc
+// threshold function for the given float value with a feathering value 
+float softThreshold(float threshold, float bound, float value);
+
+// ID_ProceduralLib.glslc
+// threshold function for the given color with a feathering value 
+vec4 softThreshold(float threshold, float bound, vec4 colorInput)
+
+
+
+
+
+
+
+
+
+
+
+// ---------------------------------------------
+// ---------------------------------------------
+// Value Interpolation Functions
+// ---------------------------------------------
+// ---------------------------------------------
+
+// ID_ProceduralLib.glslc
+// Box filtered Step function 
+// The boxstep function is somewhere between step and smoothstep. It is the result of the convolution of a box filter with a step edge. 
+float boxStep(float low, float high, float value);
+
+
+// ID_ProceduralLib.glslc
+// Smooth function using combination of smoothstep and boxstep to smooth out values
+float rsmooth(float x, float a_n, float b_n);
+
+// ID_ProceduralLib.glslc
+// Frequency Smooth function using combination of smoothstep and boxstep to smooth out noise frequencies.
+float FreqSmooth(float d, float x, float a_n, float b_n)
+
+
+// DT3D_ProceduralLib.glslc
+// a anti-aliased version of step for procedurals  
+// 'threshold' is constant , 'value' is smoothly varying
+float aastep(float threshold , float value);
+
+
+
+
+
+
+
+
+
+
+

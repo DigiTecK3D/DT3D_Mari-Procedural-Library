@@ -1,13 +1,23 @@
 DigiTecK3D Procedural Shader Library
-=====================================================================================
 Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
+=====================================================================================  
                       	
-Author: Miguel A Santiago Jr.       	
+Original Author: Miguel A Santiago Jr.       	
 Web: www.digiteck3d.com				
 Email: miguel@digiteck3d.com
+MASTER GIT: https://github.com/DigiTecK3D/DT3D_Mari-Procedural-Library
+
+
+Contributors: ============================================================================
+
+Author: Jens Kafitz
+Web: www.campi3d.com				
+Email: info@campi3d.com
+GIT Branch: https://github.com/campi3d/DT3D_Mari-Procedural-Library
+
+
     		
-License
------------------
+License: ============================================================================
 
 This program is free software: you can redistribute it and/or modify it under the terms 
 of the GNU General Public License as published by the Free Software Foundation, either 
@@ -20,10 +30,9 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with this program.  
 If not, see <http://www.gnu.org/licenses/>.
 
-Info
------------------
+Info: =============================================================================== 
 
-This is a Mari procedural library that adds new procedural types like Cellular, Gabor, 
+This is a Mari procedural library that adds new procedural functions like Cellular, Gabor, 
 Perlin, Value, Simplex, Brownian, Turbulence, Inigo Multi-Fractal, Ridged Fractal noise and 
 more planned for the future. This isn't simply just a shader library that adds new nodes 
 to Mari, but overall adds new functionality to the shader API that other shader writers 
@@ -41,8 +50,13 @@ Best of all the library will fall into the open source domain under the GNU Gene
 License and will include all of the source code for you to modify, learn, or just continue 
 to improve and add to it yourself. So you are free to do with it what you will.
 
-Installation
------------------
+
+A collabarative space for development is available here:
+
+http://github.com/DigiTecK3D/DT3D_Mari-Procedural-Library
+
+
+Installation: =======================================================================
 
 Take scripts and put them into your user preference script directory. Or any startup
 script path that Mari has set. Once these are in place, Mari on startup will run through
@@ -51,21 +65,17 @@ the console will allow you to see the modules loading up. This is where if in an
 the loading fails it will let you know. 
 
 Example:
-	ï¿½ On Linux: /Mari/Scripts/
-	ï¿½ On Windows: Documents/Mari/Scripts/	
+	• On Linux: /Mari/Scripts/
+	• On Windows: Documents/Mari/Scripts/	
 
-History
------------------
+History: ============================================================================
 
 10/15/13
 -Initial release of the Mari Procedural Library.
 
-11/15/13
-- Mofidications to Noises to cope with larger scene sizes
-- flow paintable gabor noise
 
-Credits
------------------
+
+
 
 
  
