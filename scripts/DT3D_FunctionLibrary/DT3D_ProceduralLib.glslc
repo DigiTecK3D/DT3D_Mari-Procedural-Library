@@ -2,7 +2,7 @@
 // DigiTecK3D Procedural Shader Library Registration
 // Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////// 
-// File: ProceduralLib.glslc	
+// File: DT3D_ProceduralLib.glslc	
 // Description: Procedural library for various procedural functions.
 ////////////////////////////////////////////////////////////////////////////////               	
 // Author: Miguel A Santiago Jr.       	

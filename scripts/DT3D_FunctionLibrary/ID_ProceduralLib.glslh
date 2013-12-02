@@ -1,0 +1,65 @@
+
+////////////////////////////////////////////////////////////////////////////////
+// MARI Procedural Library
+// Copyright (c) 2013 Jens Kafitz. All Rights Reserved.
+// mari.ideascale.com
+//////////////////////////////////////////////////////////////////////////////// 
+// File: ID_ProceduralLib.glslh 
+// Description: Procedural library for various procedural functions.
+////////////////////////////////////////////////////////////////////////////////                
+// Author: Jens Kafitz        
+// Web: www.campi3d.com        
+// Email: info@campi3d.com
+////////////////////////////////////////////////////////////////////////////////                                          
+// Date: Dec 2, 2013             
+////////////////////////////////////////////////////////////////////////////////
+// This program is free software: you can redistribute it and/or modify   
+// it under the terms of the GNU General Public License as published by   
+// the Free Software Foundation, either version 3 of the License, or    
+// (at your option) any later version.                    
+//                                      
+// This program is distributed in the hope that it will be useful,      
+// but WITHOUT ANY WARRANTY; without even the implied warranty of     
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      
+// GNU General Public License for more details.               
+//                                      
+// You should have received a copy of the GNU General Public License    
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.  
+////////////////////////////////////////////////////////////////////////////////
+
+
+// vsnoise(p) - vector-valued Perlin noise on a 3-D domain.
+float vsnoise(vec3 p);
+
+// The stuff that Ken Musgrave calls "VLNoise"
+float VLNoise (vec3 Pt, float scale);
+
+// A Variation of FBM without hardcoded values and added functionality
+float rmfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float freqOffset);
+
+// A Variation of FBM without hardcoded values and added functionality
+// Most incoming values are smoothed so this function is suitable for non-constant in-values.
+float smoothfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float freqOffset);
+
+// A Variation of Vector FBM without hardcoded values and added functionality
+float rmVfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float scale, float freqOffset);
+
+// A Variation of Vector FBM, generally with better performance but different results than rmVfbm
+float VLfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float scale);
+
+// Frequency Smooth function using combination of smoothstep and boxstep to smooth out noise frequencies.
+float FreqSmooth(float d, float x, float a_n, float b_n);
+
+// The boxstep function is somewhere between step and smoothstep. It is the result of the convolution of a box filter with a step edge. 
+float boxStep(float low, float high, float value);
+
+// Smooth Function using a combination of smoothstep and boxstep
+float rsmooth(float x, float a_n, float b_n);
+
+// threshold function for the givin float value with a feather value
+float softThreshold(float threshold, float bound, float value);
+
+// threshold function for the givin vec4 with a feather value
+vec4 softThreshold(float threshold, float bound, vec4 value);
+
+
