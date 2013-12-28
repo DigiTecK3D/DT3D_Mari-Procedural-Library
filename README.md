@@ -58,10 +58,10 @@ History
 -----------------
 
 - 10/15/13		Initial release of the Mari Procedural Library.
-- 12/14/13		Release of 1.06 of DT3D Procedural Node Library
-				Intergration of mari.ideascale library 
-				Final Python and Folder Structure for mari.ideascale.com
-				Exponential Frequency Growth
+- 12/14/13		Release of 1.06 of DT3D Procedural Node Library,
+				Intergration of mari.ideascale library, 
+				Final Python and Folder Structure for mari.ideascale.com,
+				Exponential Frequency Growth,
 				Flow Paintable Gabor Noise
 
 Credits
