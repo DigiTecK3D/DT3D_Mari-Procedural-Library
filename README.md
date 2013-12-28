@@ -58,7 +58,8 @@ History
 -----------------
 
 10/15/13
--Initial release of the Mari Procedural Library.
+- 10/15/13		Initial release of the Mari Procedural Library.
+- 12/14/13		V1.06 Release of Procedural Function Library
 
 Credits
 -----------------
