@@ -66,5 +66,8 @@ Example:
 History: ============================================================================
 
 - 10/15/13		V1.0 Initial Release of Procedural Function Library
-- 12/14/13		V1.06 Release of Procedural Function Library
-				Fixed bug in vec4 softThreshold Function
+- 12/14/13		Release of 1.06 of DT3D Procedural Node Library
+			Intergration of mari.ideascale library
+			Final Python and Folder Structure for mari.ideascale.com
+			Exponential Frequency Growth
+			Flow Paintable Gabor Noise
