@@ -1,15 +1,17 @@
+#version 150
+
 ////////////////////////////////////////////////////////////////////////////////
 // DigiTecK3D Procedural Shader Library Registration
 // Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////// 
-// File: ProceduralLib.glslc	
+// File: DT3D_ProceduralLib.glslc	
 // Description: Procedural library for various procedural functions.
-////////////////////////////////////////////////////////////////////////////////               	
+////////////////////////////////////////////////////////////////////////////////
 // Author: Miguel A Santiago Jr.       	
 // Web: www.digiteck3d.com				
 // Email: miguel@digiteck3d.com
-////////////////////////////////////////////////////////////////////////////////			                                   	
-// Date: Oct 15, 2013	         		
+////////////////////////////////////////////////////////////////////////////////
+// Date: Dec 20, 2013
 ////////////////////////////////////////////////////////////////////////////////
 // This program is free software: you can redistribute it and/or modify		
 // it under the terms of the GNU General Public License as published by		
@@ -91,14 +93,14 @@ vec3 positionTransform(vec3 P, vec3 Trans, vec3 Rot, vec3 Scale)
 	return P; // return modified position
 }
 
-// bias function on a givin value 
+// bias function on a given value 
 float pxslBias( float bias, float value )
 {
 	float tb = value / ((1.0/max(bias,1e-4) - 2.0) * (1.0 - value) + 1.0);
 	return tb; // return the bias value
 }
 
-// gain function on a givin value
+// gain function on a given value
 float pxslGain( float gain, float value )
 {
 	float tg;
@@ -116,7 +118,7 @@ float pxslGain( float gain, float value )
 	return tg; // return the gain value
 }
 
-// threshold function for the givin value
+// threshold function for the given value
 float pxslThreshold(float threshold, float value)
 {
 	return clamp((value - threshold) / (1.0 - threshold),0.0,1.0);
@@ -124,33 +126,33 @@ float pxslThreshold(float threshold, float value)
 
 // a anti-aliased version of step for procedurals  
 // 'threshold' is constant , 'value' is smoothly varying
-float aastep(float threshold , float value)
+/*float aastep(float threshold , float value)
 {
-   float afwidth = 0.7 * length ( vec2(dFdx(value), dFdy(value)));
-   // glsl's fwidth (value) is abs(dFdx(value)) + abs(dFdy(value))
-   return smoothstep(threshold - afwidth , threshold + afwidth , value);
-}
+	float afwidth = 0.7 * fwidth(value);
+	// glsl's fwidth (value) is abs(dFdx(value)) + abs(dFdy(value))
+	return smoothstep(threshold - afwidth , threshold + afwidth , value);
+}*/
 
 // vector noise function range of -1.0->1.0
 vec3 vnoise(vec3 P)
 {
-   float a,b,c; vec3 pa,pb;
-   // xyz noise vectors 
-   a = NoiseType(P + vec3(1.56,2.32,8.53),1);
-   b = NoiseType(P + vec3(19.34,7.66,3.23),1);
-   c = NoiseType(P + vec3(5.47,17.85,11.04),1);
-   
-   return vec3(a,b,c); // build vector noise
+	float a,b,c; vec3 pa,pb;
+	// xyz noise vectors 
+	a = NoiseType(P + vec3(1.56,2.32,8.53),1);
+	b = NoiseType(P + vec3(19.34,7.66,3.23),1);
+	c = NoiseType(P + vec3(5.47,17.85,11.04),1);
+
+	return vec3(a,b,c); // build vector noise
 }
 
 // ridged multifractal
 // see "Texturing & Modeling, A Procedural Approach", Chapter 12
 float ridge(float h, float offset)
 {
-    h = abs(h);
-    h = offset - h;
-    h = h * h;
-    return h;
+	h = abs(h);
+	h = offset - h;
+	h = h * h;
+	return h;
 }
 
 // fractional Brownian motion
@@ -160,7 +162,7 @@ float ridge(float h, float offset)
 // lacunarity     frequency spacing between successive octaves
 // gain           scaling factor between successive octaves
 //
-float fBm(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5)
+float fBm(vec3 p, int octaves, float lacunarity, float gain)
 {
 	float sum = 0.0;
 	float freq = 1.0, amp = 1.0;
@@ -179,7 +181,7 @@ float fBm(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5)
 // lacunarity     frequency spacing between successive octaves
 // gain           scaling factor between successive octaves
 //
-float turbulence(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5)
+float turbulence(vec3 p, int octaves, float lacunarity, float gain)
 {
 	float sum = 0.0;
 	float freq = 1.0, amp = 0.8;
@@ -198,7 +200,7 @@ float turbulence(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0
 // lacunarity     frequency spacing between successive octaves
 // gain           scaling factor between successive octaves
 //
-float iqmf(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5)
+float iqmf(vec3 p, int octaves, float lacunarity, float gain)
 {
 	float sum = 0.0;
 	float freq = 1.0, amp = 1.0;
@@ -219,7 +221,7 @@ float iqmf(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5)
 // gain           scaling factor between successive octaves
 // offset         a factor to offset the octaves
 //
-float ridgedmf(vec3 p, int octaves = 4, float lacunarity = 2.0, float gain = 0.5, float offset = 1.0)
+float ridgedmf(vec3 p, int octaves, float lacunarity, float gain, float offset)
 {
 	float sum = 0.0;
 	float freq = 1.0, amp = 1.0; float prev = 1.0;
@@ -267,107 +269,107 @@ vec4 DT3D_PerlinNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, float 
 // brownian fractal noise
 vec4 DT3D_fBmNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert)
 {
-   // point position in object space
-   vec3 P = Po * frequency; 
+	// point position in object space
+	vec3 P = Po * frequency; 
 
-   // call our noise noise function
-   float noise = fBm(P,octaves,lacunarity,gain) * 0.5+0.5;
+	// call our noise noise function
+	float noise = fBm(P,octaves,lacunarity,gain) * 0.5+0.5;
 
-   if(threshold > 0.0) // threshold 
-   {
-     // threshold the noise value
-     noise = pxslThreshold(threshold,noise);
-   }
+	if(threshold > 0.0) // threshold 
+	{
+		// threshold the noise value
+		noise = pxslThreshold(threshold,noise);
+	}
 
-   if(invert) // invert the result 
-   {
-     // invert the result
-     noise = 1.0 - noise;
-   }
+	if(invert) // invert the result 
+	{
+		// invert the result
+		noise = 1.0 - noise;
+	}
 
-   // final output color result
-   vec4 resultColor = mix( colorA, colorB, noise);
+	// final output color result
+	vec4 resultColor = mix( colorA, colorB, noise);
 
-   return resultColor;
+	return resultColor;
 }
 
 // turbulence fractal noise
 vec4 DT3D_TurbNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert)
 {
-   // point position in object space
-   vec3 P = Po * frequency; 
+	// point position in object space
+	vec3 P = Po * frequency; 
 
-   // call our noise noise function
-   float noise = turbulence(P,octaves,lacunarity,gain);
+	// call our noise noise function
+	float noise = turbulence(P,octaves,lacunarity,gain);
 
-   if(threshold > 0.0) // threshold 
-   {
-     // threshold the noise value
-     noise = pxslThreshold(threshold,noise);
-   }
+	if(threshold > 0.0) // threshold 
+	{
+		// threshold the noise value
+		noise = pxslThreshold(threshold,noise);
+	}
 
-   if(invert) // invert the result 
-   {
-     // invert the result
-     noise = 1.0 - noise;
-   }
+	if(invert) // invert the result 
+	{
+		// invert the result
+		noise = 1.0 - noise;
+	}
 
-   // final output color result
-   vec4 resultColor = mix( colorA, colorB, noise);
+	// final output color result
+	vec4 resultColor = mix( colorA, colorB, noise);
 
-   return resultColor;
+	return resultColor;
 }
 
 // inigo multi fractal noise
 vec4 DT3D_InigoNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert)
 {
-   // point position in object space
-   vec3 P = Po * frequency; 
+	// point position in object space
+	vec3 P = Po * frequency; 
 
-   // call our noise noise function
-   float noise = iqmf(P,octaves,lacunarity,gain)*0.5+0.5;
+	// call our noise noise function
+	float noise = iqmf(P,octaves,lacunarity,gain)*0.5+0.5;
 
-   if(threshold > 0.0) // threshold 
-   {
-     // threshold the noise value
-     noise = pxslThreshold(threshold,noise);
-   }
+	if(threshold > 0.0) // threshold 
+	{
+		// threshold the noise value
+		noise = pxslThreshold(threshold,noise);
+	}
 
-   if(invert) // invert the result 
-   {
-     // invert the result
-     noise = 1.0 - noise;
-   }
+	if(invert) // invert the result 
+	{
+		// invert the result
+		noise = 1.0 - noise;
+	}
 
-   // final output color result
-   vec4 resultColor = mix( colorA, colorB, noise);
+	// final output color result
+	vec4 resultColor = mix( colorA, colorB, noise);
 
-   return resultColor;
+	return resultColor;
 }
 
 // ridged multi fractal noise
 vec4 DT3D_RidgedNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float offset, float threshold, bool invert)
 {
-   // point position in object space
-   vec3 P = Po * frequency; 
+	// point position in object space
+	vec3 P = Po * frequency; 
 
-   // call our noise noise function
-   float noise = ridgedmf(P,octaves,lacunarity,gain,offset)*0.5+0.5;
+	// call our noise noise function
+	float noise = ridgedmf(P,octaves,lacunarity,gain,offset)*0.5+0.5;
 
-   if(threshold > 0.0) // threshold 
-   {
-     // threshold the noise value
-     noise = pxslThreshold(threshold,noise);
-   }
+	if(threshold > 0.0) // threshold 
+	{
+		// threshold the noise value
+		noise = pxslThreshold(threshold,noise);
+	}
 
-   if(invert) // invert the result 
-   {
-     // invert the result
-     noise = 1.0 - noise;
-   }
+	if(invert) // invert the result 
+	{
+		// invert the result
+		noise = 1.0 - noise;
+	}
 
-   // final output color result
-   vec4 resultColor = mix( colorA, colorB, noise);
+	// final output color result
+	vec4 resultColor = mix( colorA, colorB, noise);
 
-   return resultColor;
+	return resultColor;
 }

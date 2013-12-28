@@ -1,18 +1,17 @@
 #version 330
-#extension GL_EXT_gpu_shader4 : enable
 
 ////////////////////////////////////////////////////////////////////////////////
 // DigiTecK3D Procedural Shader Library Registration
 // Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
 //////////////////////////////////////////////////////////////////////////////// 
-// File: CellularNoiseLib.glslc	
+// File: DT3D_CellularNoiseLib.glslc	
 // Description: Cellular noise library for the cellular noise funciton.
-////////////////////////////////////////////////////////////////////////////////               	
+////////////////////////////////////////////////////////////////////////////////
 // Author: Miguel A Santiago Jr.       	
 // Web: www.digiteck3d.com				
 // Email: miguel@digiteck3d.com
-////////////////////////////////////////////////////////////////////////////////			                                   	
-// Date: Oct 15, 2013	         		
+////////////////////////////////////////////////////////////////////////////////
+// Date: Dec 20, 2013
 ////////////////////////////////////////////////////////////////////////////////
 // This program is free software: you can redistribute it and/or modify		
 // it under the terms of the GNU General Public License as published by		
@@ -35,7 +34,7 @@ float pxslThreshold(float threshold, float value);
 //
 // a anti-aliased version of step for procedurals  
 // 'threshold' is constant , 'value' is smoothly varying
-float aastep(float threshold , float value);
+//float aastep(float threshold , float value);
 
 // random float generator [0,1]
 float rnd_1d(vec2 x)
@@ -125,13 +124,13 @@ float cosineValue(float f2f1)
 float voronoiStep(float f2f1, float stepsize, vec3 pos1, vec3 pos2, vec3 pp)     
 {
 	float scalefactor = distance(pos1,pos2) / (distance(pos1,pp)+distance(pos2,pp));
-	//float g = step(stepsize*scalefactor, f2f1);
-	float g = aastep(stepsize*scalefactor, f2f1);	
+	float g = step(stepsize*scalefactor, f2f1);
+	//float g = aastep(stepsize*scalefactor, f2f1);   
 	return g;
 }
-			
+         
 // voronoi cellular pattern generator
-void voronoi(vec3 position, float jitterD=.9, int distype = 0, out float f1, out float f2, out vec3 pos1, out vec3 pos2, out vec3 f1cell, out vec3 f2cell)  
+void voronoi(vec3 position, float jitterD, int distype, out float f1, out float f2, out vec3 pos1, out vec3 pos2, out vec3 f1cell, out vec3 f2cell)  
 {  
 	vec3 thiscell = floor(position)+0.5f;  
 	f1 = f2 = 1000; pos1 = pos2 = vec3(0,0,0); 
@@ -243,12 +242,12 @@ vec4 DT3D_CellularNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, floa
 	{
 		switch(modSet) 
 		{
-			 case 3: // step outline no threshold
-			 cellmod.x = cellmod.x;
-			 break;
-			 case 0: // run threshold otherwise  
-			 default:
-			 cellmod.x = pxslThreshold(threshold,cellmod.x);
+			case 3: // step outline no threshold
+			cellmod.x = cellmod.x;
+			break;
+			case 0: // run threshold otherwise  
+			default:
+			cellmod.x = pxslThreshold(threshold,cellmod.x);
 		}
 	}
 

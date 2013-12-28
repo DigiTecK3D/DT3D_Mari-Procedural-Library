@@ -1,0 +1,72 @@
+////////////////////////////////////////////////////////////////////////////////
+// Mari Ideascale Procedural Library
+// Copyright (c) 2013 Jens Kafitz. All Rights Reserved.
+//////////////////////////////////////////////////////////////////////////////// 
+// File: ID_ProceduralLib.glslh 
+// Description: Procedural library for various procedural functions.
+////////////////////////////////////////////////////////////////////////////////                
+// Author: Jens Kafitz | Mari Ideascale
+// Web: www.campi3d.com      
+// Web: www.mari.ideascale.com         
+// Email: info@campi3d.com
+////////////////////////////////////////////////////////////////////////////////                                          
+// Date: Dec 20, 2013
+////////////////////////////////////////////////////////////////////////////////
+// This program is free software: you can redistribute it and/or modify   
+// it under the terms of the GNU General Public License as published by   
+// the Free Software Foundation, either version 3 of the License, or    
+// (at your option) any later version.                    
+//                                      
+// This program is distributed in the hope that it will be useful,      
+// but WITHOUT ANY WARRANTY; without even the implied warranty of     
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      
+// GNU General Public License for more details.               
+//                                      
+// You should have received a copy of the GNU General Public License    
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.  
+////////////////////////////////////////////////////////////////////////////////
+
+// the boxStep function is somewhere between step and smoothstep. it is the 
+// result of the convolution of a box filter with a step edge. 
+float boxStep(float low, float high, float value);
+
+// smooth function using a combination of smoothstep and boxStep
+float rsmooth(float x, float a_n, float b_n);
+
+// frequency smooth function using combination of smoothstep and boxStep to smooth out noise frequencies.
+float freqSmooth(float d, float x, float a_n, float b_n);
+
+// threshold function for the givin float value with a feather value
+float softThreshold(float threshold, float bound, float value);
+
+// threshold function for the givin vec4 with a feather value
+vec4 softThreshold(float threshold, float bound, vec4 value);
+
+// remap function for float
+float remap(float value, float oldMin, float oldMax, float newMin, float newMax, float multiplier);
+
+// remap function for color vec4 (color with alpha)
+vec4 remap(vec4 value, float oldMin, float oldMax, float newMin, float newMax, float multiplier);
+
+// remap function for color vec3
+vec3 remap(vec3 value, float oldMin, float oldMax, float newMin, float newMax, float multiplier);
+
+// vsnoise(p) - vector-valued perlin noise on a 3-d domain.
+float vsnoise(vec3 P);
+
+// the stuff that ken musgrave calls "vlnoise"
+float vlnoise (vec3 P, float scale);
+
+// a variation of fbm without hardcoded values and added functionality
+float rmfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float freqOffset);
+
+// a variation of vector fbm, generally with better performance but different results than smoothvfbm
+float vlfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float scale);
+
+// a variation of fbm without hardcoded values and added functionality
+// most incoming values are smoothed so this function is suitable for non-constant in-values.
+float smoothfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float freqOffset);
+
+// a variation of vector fbm without hardcoded values and added functionality
+// most incoming values are smoothed so this function is suitable for non-constant in-values.
+float smoothVfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float scale, float freqOffset);
