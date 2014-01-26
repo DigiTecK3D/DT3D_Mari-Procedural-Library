@@ -9,7 +9,7 @@ Email: miguel@digiteck3d.com
 Contributors
 -----------------
 
-- Jens Kafitz www.campi3d.com // info@campi3d.com
+- Jens Kafitz | Web: www.campi3d.com | Email: info@campi3d.com
 
 License
 -----------------
