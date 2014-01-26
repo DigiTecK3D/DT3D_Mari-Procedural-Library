@@ -6,6 +6,11 @@ Author: Miguel A Santiago Jr.
 Web: www.digiteck3d.com				
 Email: miguel@digiteck3d.com
     		
+Contributors
+-----------------
+
+- Jens Kafitz www.campi3d.com // info@campi3d.com
+
 License
 -----------------
 
@@ -63,6 +68,3 @@ History
 				Final Python and Folder Structure for mari.ideascale.com,
 				Exponential Frequency Growth,
 				Flow Paintable Gabor Noise
-
-Credits
------------------
