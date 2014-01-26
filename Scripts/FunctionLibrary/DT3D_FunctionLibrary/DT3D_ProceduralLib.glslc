@@ -45,7 +45,7 @@ float NoiseType(vec3 p, int type);
 vec3 translate( vec3 P, vec3 trans)
 {
 	// translate position xyz
-	P.x += trans.x;P.y += trans.y;P.z += trans.z;
+	P.x -= trans.x;P.y -= trans.y;P.z -= trans.z;
 	return P;
 }
 
