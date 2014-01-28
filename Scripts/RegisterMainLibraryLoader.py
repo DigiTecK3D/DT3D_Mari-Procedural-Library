@@ -67,7 +67,7 @@ import RegisterDT3DNodeLibrary
 # Console printing credits information
 
 # Print info into the console
-print "Mari Funtion Library v1.06"
+print "Mari Function Library v1.06"
 print "Mari Ideascale : www.mari.ideascale.com"
 print "--------------------------------"
 print "DT3D Mari Procedural Library v1.06"
