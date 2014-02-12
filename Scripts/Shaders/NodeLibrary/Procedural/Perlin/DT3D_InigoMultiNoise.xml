@@ -1,5 +1,6 @@
 <Node>
-  <ID>DT3D_InigoMultiNoise</ID>
+  <ID>Inigo Noise</ID>
+  <Category>Procedural/Custom/Perlin/</Category>
     <Inputs>
         <Input Name="Input"></Input>
     </Inputs>
@@ -30,9 +31,10 @@
                 <Input Name="Input"><Default>vec4(1,1,1,1)</Default></Input>
             </Inputs>
             <Body><![CDATA[
+
 			
             // compensate for scene size by applying eponential growth
-			float freq_pow = (pow($frequency,$frequency)-1.0) + 0.01;
+    		float freq_pow = (pow($frequency,$frequency)-1.0) + 0.01;
 
 			// build the needed vector attributes for position transform, offset max growths exponentiall
 			vec3 trans = (vec3($transX,$transY,$transZ)*freq_pow) + vec3($Seed);
@@ -42,7 +44,7 @@
 			// transform the position to translate,rotate,scale the position
 			vec3 P = positionTransform(State.Position,trans,rotate,scale) / freq_pow;
 			
-			// inigo noise function
+			// perlin noise function
             Output = DT3D_InigoNoise(P,$colorA,$colorB,$frequency,$octaves,$lacunarity,1.0-$gain,$threshold,$invert);
 			
             ]]></Body>

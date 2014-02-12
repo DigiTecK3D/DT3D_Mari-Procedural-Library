@@ -5,14 +5,14 @@ Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
 Original Author: Miguel A Santiago Jr.       	
 Web: www.digiteck3d.com				
 Email: miguel@digiteck3d.com
-Master Git: https://github.com/DigiTecK3D/DT3D_Mari-Procedural-Library
+MASTER GIT: https://github.com/DigiTecK3D/DT3D_Mari-Procedural-Library
 
 Contributors: ============================================================================
 
 Author: Jens Kafitz
 Web: www.campi3d.com				
 Email: info@campi3d.com
-Git Branch: https://github.com/campi3d/DT3D_Mari-Procedural-Library
+GIT Branch: https://github.com/campi3d/DT3D_Mari-Procedural-Library
     		
 License: ============================================================================
 
@@ -49,7 +49,7 @@ to improve and add to it yourself. So you are free to do with it what you will.
 
 A collabarative space for development is available here:
 
-http://github.com/DigiTecK3D/DT3D_Mari-Procedural-Library
+https://github.com/DigiTecK3D/DT3D_Mari-Procedural-Library
 
 Installation: =======================================================================
 
@@ -65,9 +65,12 @@ Example:
 
 History: ============================================================================
 
-- 10/15/13		V1.0 Initial Release of Procedural Function Library
-- 12/14/13		Release of 1.06 of DT3D Procedural Node Library
-			Intergration of mari.ideascale library
-			Final Python and Folder Structure for mari.ideascale.com
-			Exponential Frequency Growth
-			Flow Paintable Gabor Noise
+- 10/15/13 	V1.0 Initial Release of Procedural Function Library
+- 12/14/13 	Release of 1.06 of DT3D Procedural Node Library
+		Intergration of mari.ideascale library
+		Final Python and Folder Structure for mari.ideascale.com
+		Exponential Frequency Growth
+		Flow Paintable Gabor Noise
+- 02/08/14    	Released with new Autoloader Structure
+
+=====================================================================================

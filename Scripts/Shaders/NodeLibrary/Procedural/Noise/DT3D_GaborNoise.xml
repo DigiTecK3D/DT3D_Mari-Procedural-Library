@@ -1,20 +1,25 @@
 <Node>
-  <ID>DT3D_CellularNoise</ID>
+  <ID>Paintable Gabor Noise</ID>
+  <Category>Custom/</Category>
+   <Tags>
+    <Tag>_adjustment</Tag>
+  </Tags>
     <Inputs>
-        <Input Name="Input"></Input>
-    </Inputs>
+      <Input Name="Input" PreferredInput='1'/>
+  	</Inputs>
     <Attributes>
 		<Attribute Name="colorA" PrettyName="Color A" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(0,0,0,1)</Attribute>
 		<Attribute Name="colorB" PrettyName="Color B" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(1,1,1,1)</Attribute>
 		<Attribute Name="frequency" PrettyName="Frequency" Group="Scale" Type="float" Min="1" Max="10" Logarithmic="1">2</Attribute>
-		<Attribute Name="jitter" PrettyName="Jitter" Group="Scale" Type="float" Min="0" Max="1.5">0.9</Attribute>
-		<Attribute Name="Seed" PrettyName="Seed" Group="Scale" Type="double" Min="1" Max="100000" Logarithmic="1">1</Attribute> 
-		<Attribute Name="outSet" PrettyName="Output Type" Group="Modifiers" Type="stringlist">F1,F1,F2,F2-F1,F1+F2,F1*F2</Attribute>
-		<Attribute Name="distSet" PrettyName="Distance Type" Group="Modifiers" Type="stringlist">Real,Real,Squared,Quadratic,Manhattan,Chebychev,MinkovskyH,Minkovsky4</Attribute>
-		<Attribute Name="modSet" PrettyName="Modifier Type" Group="Modifiers" Type="stringlist">None,None,Signed,Cosine,Outline</Attribute>
-		<Attribute Name="stepSize" PrettyName="Outline Size" Group="Modifiers" Type="float" Min="0" Max="1.0">0.05</Attribute>
-		<Attribute Name="threshold" PrettyName="Threshold" Group="Modifiers" Type="float" Min="0" Max="1" Logarithmic="1">0.0</Attribute>
-		<Attribute Name="invert" PrettyName="Invert" Group="Modifiers" Type="bool" Min="false" Max="true">false</Attribute>
+        <Attribute Name="Seed" PrettyName="Seed" Group="Scale" Type="double" Min="1" Max="100000" Logarithmic="1">1</Attribute> 
+        <Attribute Name="UseFlow" PrettyName="Use painted Flow" Group="Direction" Type="bool" Min="false" Max="true" Description="When on you can use Mari's Vector Brushes to paint direction" >false</Attribute>
+       	<Attribute Name="dirX" PrettyName="Direction X" Group="Direction" Type="float" Min="0" Max="200">1</Attribute>
+        <Attribute Name="dirY" PrettyName="Direction Y" Group="Direction" Type="float" Min="0" Max="200">0</Attribute>
+        <Attribute Name="dirZ" PrettyName="Direction Z" Group="Direction" Type="float" Min="0" Max="200">0</Attribute>
+		<Attribute Name="noiseType" PrettyName="Noise Type" Group="Modifiers" Type="stringlist">Isotropic,Anisotropic,Isotropic,Hybrid</Attribute>
+		<Attribute Name="impulses" PrettyName="Impulses" Group="Modifiers" Type="float" Min="1.0" Max="60">32.0</Attribute>
+		<Attribute Name="bandwidth" PrettyName="Bandwidth" Group="Modifiers" Type="float" Min="0.01" Max="10.0">2.0</Attribute>
+        <Attribute Name="truncate" PrettyName="Truncate" Group="Modifiers" Type="float" Min="0.001" Max="0.9">0.01</Attribute>
 		<Attribute Name="transX" PrettyName="TranslateX" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
 		<Attribute Name="transY" PrettyName="TranslateY" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
 		<Attribute Name="transZ" PrettyName="TranslateZ" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
@@ -32,8 +37,8 @@
                 <Input Name="Input"><Default>vec4(1,1,1,1)</Default></Input>
             </Inputs>
             <Body><![CDATA[
-			
-            // compensate for scene size by applying exponential growth
+
+            // compensate for scene size by applying eponential growth
     		float freq_pow = (pow($frequency,$frequency)-1.0) + 0.01;
 
 			// build the needed vector attributes for position transform, offset max growths exponentiall
@@ -44,9 +49,18 @@
 			// transform the position to translate,rotate,scale the position
 			vec3 P = positionTransform(State.Position,trans,rotate,scale) / freq_pow;
 			
-			// cellular noise function
-            Output = DT3D_CellularNoise(P,$colorA,$colorB,$frequency,$jitter,$stepSize,$threshold,$invert,$outSet,$distSet,$modSet);
-			
+			// grab our anisotropic direction
+			vec3 D = vec3($dirX,$dirY,$dirZ);
+
+    		vec4 fullFlow = #Input;
+    		vec3 flow = (fullFlow.rgb + vec3(-1.0)) + vec3(0.001);
+
+			// Switches between attribute based direction and vector map based direction
+			vec3 direction = mix(D,flow,float($UseFlow));  
+	
+			// gabor noise function
+            Output = DT3D_GaborNoise(P,$colorA,$colorB,$frequency,direction,$bandwidth,$truncate,$impulses,1245,$noiseType);
+		
             ]]></Body>
         </Shader>
     </Context>

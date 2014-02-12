@@ -1,0 +1,77 @@
+License: ============================================================================
+
+SDK Library information regarding development usage and developer integration ideology
+for new coming developers looking into adding and extending the library future.  
+
+Adding Library Functions : ==========================================================
+
+glslc|glslh files are automatically registered when placed inside the following folder structure
+
+~\Scripts\Shaders\FunctionLibrary\
+
+Its best to try to follow how the folder and file naming convection are currently set so using the 
+fileFunctionName.glslc -- This is the equivalent of a source file
+fileFunctionName.glslh -- This is the equivalent of a header file 
+
+Create your own Sub-folder to keep things separate and organized, while also allowing to give credit internal to developers.
+Example: ~\Scripts\Shaders\FunctionLibrary\USER_FunctionLibrary -- Its best to have an initial for yourself to prefix all files.
+
+An example that is currently is set in the library "DT3D_" - Miguel A Santiago Jr "JK_"- Jens Kafitz etc...
+With this system you can prefix any nodes added into the library from the XML nodes, to Function libraries 
+Example: USER_NewNode.xml, USER_Procedurals.glslc etc... 
+
+One thing that is not needed, but can be set for allowing to properly name your function library on 
+the output of the python console load up is setting the LibraryNamer.xml in the \FunctionLibrary\ 
+This allows you to set a custom Python Register Printout in the console for your library.
+Example: <DT3D_ProceduralLib>DT3D Procedural Lib</DT3D_ProceduralLib>
+  		 <ID_ProceduralLib>Ideascale Procedural Lib</ID_ProceduralLib>
+
+The name inside of the Tag must be the exact name of the file for your function file you are registering
+into the library. So in the previous examples the file names are DT3D_ProceduralLib.glslc/glslh It is
+important that the file name and tag match exactly, because that is how the renamer XML file works with the
+autoloader.
+
+We would encourage you to add your functions to the MariFunctionLib_FunctionOverview.txt file to allow other devs to easily 
+find useful things for their development
+
+
+Adding XML Nodes : ===================================================================
+
+Node XML files are automatically loaded without the need for extra python scripts.
+
+The XML library structure follows the default XML Mari structure that is set in the 
+various examples they provide and including in the shader documentation API help file. 
+
+Nodes are automatically detected as long as they are placed into
+~\Scripts\Shaders\NodeLibrary
+
+From here the autoloader will automatically detect what type of node it is and properly 
+register the node automatically without the need for writing anymore python register files.
+ 
+The autoloader will use the default tags that are found in the Mari XML file structure and place
+them into five types, Adjustment, Procedural, Diffuse, Specular, Standalone shader
+
+The only additional tag that must be added into the XML nodes as part of the autoloader library is
+a sorting tag for allowing to subcategories the XML nodes. 
+
+This tag must be in place for Adjustment and Procedural nodes, if note the nodes will fail to register 
+The tag that is required follows as such.. <Category></Category>
+
+Example: <Category>Geometry/Custom/</Category> 
+for example will place the node inside the Geometry Folder in Mari's Procedural Menu with a sub-folder /Custom/
+
+
+Adding Lighting Shaders : ==============================================================
+
+Shader Files follow the same general rule as the XML nodes without the need to set the Category Tag into the XML 
+since shaders are not allowed to be set into subcategories. So lighting shaders will fall into these various folders. 
+
+~\Scripts\Shaders\NodeLibrary\Lighting\Diffuse\
+~\Scripts\Shaders\NodeLibrary\Lighting\Specular\
+~\Scripts\Shaders\NodeLibrary\Lighting\Standalone\
+
+The Name of the Shader is extracted from the <ID></ID> Tag  
+Example: <ID>BRDF Lambert</ID>
+So make sure what you want the name of the shader to be displayed as is set here.
+
+========================================================================================

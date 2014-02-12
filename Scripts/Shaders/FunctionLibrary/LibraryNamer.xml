@@ -1,0 +1,10 @@
+<Node>
+  <LibraryVersion>1.06</LibraryVersion>
+  <BS_GpuNoiseLib>Brian Sharpe GPU Noise Lib</BS_GpuNoiseLib>
+  <DT3D_CellularNoiseLib>DT3D Cellular Lib</DT3D_CellularNoiseLib>
+  <AL_GaborNoiseLib>Anders Langlands Gabor Lib</AL_GaborNoiseLib>
+  <DT3D_ProceduralLib>DT3D Procedural Lib</DT3D_ProceduralLib>
+  <ID_ProceduralLib>Ideascale Procedural Lib</ID_ProceduralLib>
+  <DT3D_BrdfLib>DT3D BRDF Lib</DT3D_BrdfLib>
+  <DT3D_IBLshLib>DT3D IBL Lib</DT3D_IBLshLib>
+</Node>

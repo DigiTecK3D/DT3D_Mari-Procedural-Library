@@ -1,5 +1,6 @@
 <Node>
-  <ID>DT3D_PerlinNoise</ID>
+  <ID>Cellular Noise</ID>
+  <Category>Procedural/Custom/Voronoi/</Category>
     <Inputs>
         <Input Name="Input"></Input>
     </Inputs>
@@ -7,9 +8,13 @@
 		<Attribute Name="colorA" PrettyName="Color A" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(0,0,0,1)</Attribute>
 		<Attribute Name="colorB" PrettyName="Color B" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(1,1,1,1)</Attribute>
 		<Attribute Name="frequency" PrettyName="Frequency" Group="Scale" Type="float" Min="1" Max="10" Logarithmic="1">2</Attribute>
+		<Attribute Name="jitter" PrettyName="Jitter" Group="Scale" Type="float" Min="0" Max="2.0">0.9</Attribute>
 		<Attribute Name="Seed" PrettyName="Seed" Group="Scale" Type="double" Min="1" Max="100000" Logarithmic="1">1</Attribute> 
-		<Attribute Name="noiseType" PrettyName="Noise Type" Group="Modifiers" Type="stringlist">Perlin,Value,Perlin,Simplex</Attribute>
-		<Attribute Name="threshold" PrettyName="Threshold" Group="Modifiers" Type="float" Min="0" Max="1" Logarithmic="1">0</Attribute>
+		<Attribute Name="outSet" PrettyName="Output Type" Group="Modifiers" Type="stringlist">F1,F1,F2,F2-F1,F1+F2,F1*F2</Attribute>
+		<Attribute Name="distSet" PrettyName="Distance Type" Group="Modifiers" Type="stringlist">Real,Real,Squared,Quadratic,Manhattan,Chebychev,MinkovskyH,Minkovsky4</Attribute>
+		<Attribute Name="modSet" PrettyName="Modifier Type" Group="Modifiers" Type="stringlist">None,None,Signed,Cosine,Outline</Attribute>
+		<Attribute Name="stepSize" PrettyName="Outline Size" Group="Modifiers" Type="float" Min="0" Max="1.0">0.05</Attribute>
+		<Attribute Name="threshold" PrettyName="Threshold" Group="Modifiers" Type="float" Min="0" Max="1" Logarithmic="1">0.0</Attribute>
 		<Attribute Name="invert" PrettyName="Invert" Group="Modifiers" Type="bool" Min="false" Max="true">false</Attribute>
 		<Attribute Name="transX" PrettyName="TranslateX" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
 		<Attribute Name="transY" PrettyName="TranslateY" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
@@ -30,8 +35,8 @@
             <Body><![CDATA[
 			
             // compensate for scene size by applying exponential growth
-			float freq_pow = (pow($frequency,$frequency)-1.0) + 0.01;
-			
+    		float freq_pow = (pow($frequency,$frequency)-1.0) + 0.01;
+
 			// build the needed vector attributes for position transform, offset max growths exponentiall
 			vec3 trans = (vec3($transX,$transY,$transZ)*freq_pow) + vec3($Seed);
 			vec3 rotate = vec3($rotateX,$rotateY,$rotateZ);
@@ -40,8 +45,8 @@
 			// transform the position to translate,rotate,scale the position
 			vec3 P = positionTransform(State.Position,trans,rotate,scale) / freq_pow;
 			
-			// perlin noise function
-            Output = DT3D_PerlinNoise(P,$colorA,$colorB,$frequency,$threshold,$invert,1,$noiseType);
+			// cellular noise function
+            Output = DT3D_CellularNoise(P,$colorA,$colorB,$frequency,$jitter,$stepSize,$threshold,$invert,$outSet,$distSet,$modSet);
 			
             ]]></Body>
         </Shader>
