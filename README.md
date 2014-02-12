@@ -68,3 +68,4 @@ History
 				Final Python and Folder Structure for mari.ideascale.com,
 				Exponential Frequency Growth,
 				Flow Paintable Gabor Noise
+- 02/08/14    	Released with new Autoloader Structure and Loader Scripts
