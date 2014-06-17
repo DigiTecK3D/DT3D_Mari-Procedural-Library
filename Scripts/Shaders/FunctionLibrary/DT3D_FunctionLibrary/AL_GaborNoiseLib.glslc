@@ -1,121 +1,115 @@
 #version 330
 
 ////////////////////////////////////////////////////////////////////////////////
-// DigiTecK3D Procedural Shader Library Registration
+// DigiTecK3D Procedural Shader Library
 // Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
-//////////////////////////////////////////////////////////////////////////////// 
-// File: AL_GaborNoiseLib.glslc	
-// Description: Modified port from Anders Langlands Gabor noise function. 
 ////////////////////////////////////////////////////////////////////////////////
-// Author: Miguel A Santiago Jr.       	
-// Web: www.digiteck3d.com				
+// File: AL_GaborNoiseLib.glslc
+// Description: Modified port from Anders Langlands Gabor noise function.
+////////////////////////////////////////////////////////////////////////////////
+// Author: Anders Langlands
+// Web: www.bitbucket.org/anderslanglands/alshaders
+// Email: anderslanglands@gmail.com
+////////////////////////////////////////////////////////////////////////////////
+// Contributors:
+// Author: Miguel A Santiago Jr.
+// Web: www.digiteck3d.com
 // Email: miguel@digiteck3d.com
 ////////////////////////////////////////////////////////////////////////////////
-// Date: Oct 15, 2013	         		
+// Modified Date: June 14, 2014
 ////////////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify		
-// it under the terms of the GNU General Public License as published by		
-// the Free Software Foundation, either version 3 of the License, or		
-// (at your option) any later version.										
-//																			
-// This program is distributed in the hope that it will be useful,			
-// but WITHOUT ANY WARRANTY; without even the implied warranty of			
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the			
-// GNU General Public License for more details.								
-//																			
-// You should have received a copy of the GNU General Public License		
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.	
-////////////////////////////////////////////////////////////////////////////////
-// Credit Author: Anders Langlands
-// Credit License: MIT Licence
-////////////////////////////////////////////////////////////////////////////////
-// This software is released under the MIT licence
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
 //
-// Copyright (c) 2012 Anders Langlands
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy of 
-// this software and associated documentation files (the "Software"), to deal in 
-// the Software without restriction, including without limitation the rights to 
-// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of 
-// the Software, and to permit persons to whom the Software is furnished to do so, 
-// subject to the following conditions:
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
 //
-// The above copyright notice and this permission notice shall be included in all 
-// copies or substantial portions of the Software.
+// 3. Neither the name of the copyright holder nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS 
-// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
-// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER 
-// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
-// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+// ADVISED OF HE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////
 
 //#define uint unsigned int
-#define M_LN2 0.69314718055994530942 
+#define M_LN2 0.69314718055994530942
 #define M_PI 3.141592653589793238462
 
 // -----------------------------------------------------------------------------
 
 struct noise_prng
 {
-   uint x_;
+    uint x_;
 };
 
 void noise_prng_srand(inout noise_prng this_, const in uint s)
 {
-   this_.x_ = s;
+    this_.x_ = s;
 }
 
 uint noise_prng_rand(inout noise_prng this_)
 {
-   return this_.x_ *= 3039177861u;
+    return this_.x_ *= 3039177861u;
 }
 
 float noise_prng_uniform_0_1(inout noise_prng this_)
 {
-   return float(noise_prng_rand(this_)) / float(4294967295u);
+    return float(noise_prng_rand(this_)) / float(4294967295u);
 }
 
 float noise_prng_uniform(inout noise_prng this_, const in float min_, const in float max_)
 {
-   return min_ + (noise_prng_uniform_0_1(this_) * (max_ - min_));
+    return min_ + (noise_prng_uniform_0_1(this_) * (max_ - min_));
 }
 
 float noise_prng_gaussian_0_1(inout noise_prng this_)
 {
-   return sqrt(-2.0 * log(noise_prng_uniform_0_1(this_))) * cos(2.0 * M_PI * noise_prng_uniform_0_1(this_));
-} 
+    return sqrt(-2.0 * log(noise_prng_uniform_0_1(this_))) * cos(2.0 * M_PI * noise_prng_uniform_0_1(this_));
+}
 
 uint noise_prng_poisson(inout noise_prng this_, const in float mean)
 {
-   return uint(floor(mean + 0.5 + (sqrt(mean) * noise_prng_gaussian_0_1(this_))));
+    return uint(floor(mean + 0.5 + (sqrt(mean) * noise_prng_gaussian_0_1(this_))));
 }
 
 // -----------------------------------------------------------------------------
 
 struct noise_class
 {
-  float lambda_;
-  float radius3_;
-  float radius_;
-  uint seed_;
-  vec3 omega_;
-  float a_;
-  int type_;
+    float lambda_;
+    float radius3_;
+    float radius_;
+    uint seed_;
+    vec3 omega_;
+    float a_;
+    int type_;
 };
 
 void noise_constructor(out noise_class this_, const in float lambda, const in float radius, const in uint seed, const in vec3 omega, const in float a, const in int type)
 {
-  this_.lambda_ = lambda;
-  this_.radius_ = radius;
-  this_.seed_ = seed;
-  this_.omega_ = omega;
-  this_.a_ = a;
-  this_.type_ = type;
+    this_.lambda_ = lambda;
+    this_.radius_ = radius;
+    this_.seed_ = seed;
+    this_.omega_ = omega;
+    this_.a_ = a;
+    this_.type_ = type;
 }
 
-// -----------------------------------------------------------------------------    
+// -----------------------------------------------------------------------------
 
 /// gabor kernel. cosine weighted by a gaussian, augmented with a phase as per [1]
 /// @param weight magnitude of the pulse
@@ -125,129 +119,129 @@ void noise_constructor(out noise_class this_, const in float lambda, const in fl
 /// @param x the position being sampled
 float gaborKernel2d(const in float weight, const in vec3 omega, const in float phi, const in float bandwidth, const in vec3 x)
 {
-   float g = exp(-M_PI * (bandwidth*bandwidth) * dot(x, x));
-   float h = cos((2*M_PI) * dot(omega, x) + phi);
-   return weight * g * h;
+    float g = exp(-M_PI * (bandwidth*bandwidth) * dot(x, x));
+    float h = cos((2*M_PI) * dot(omega, x) + phi);
+    return weight * g * h;
 }
 
 // choose an omega and phi value for a particular gabor impulse based on the user parameters
 void gaborSample(const in noise_class gp, inout noise_prng rng, out vec3 omega, out float phi)
 {
-   if (gp.type_ == 0) // anisotropic
-   {
-      omega = gp.omega_;
-   }
-   else if (gp.type_ == 1) // isotropic
-   {
-      float f = length(gp.omega_);
-      float omega_r = f;
-      float omega_t = noise_prng_uniform(rng, 0.0, 2.0 * M_PI);
-      float omega_p = acos(noise_prng_uniform(rng, -1.0, +1.0));
-      omega = omega_r * vec3(cos(omega_t) * sin(omega_p), sin(omega_t) * sin(omega_p), cos(omega_p));
-   }
-   else // hybrid
-   {
-      float omega_r = length(gp.omega_);
-      float omega_t = noise_prng_uniform(rng, 0.0, 2.0 * M_PI);
-      omega = omega_r * vec3(cos(omega_t), sin(omega_t), 0.0);
-   }
-   phi = noise_prng_uniform(rng, 0.0, 2.0 * M_PI);
+    if (gp.type_ == 0) // anisotropic
+    {
+        omega = gp.omega_;
+    }
+    else if (gp.type_ == 1) // isotropic
+    {
+        float f = length(gp.omega_);
+        float omega_r = f;
+        float omega_t = noise_prng_uniform(rng, 0.0, 2.0 * M_PI);
+        float omega_p = acos(noise_prng_uniform(rng, -1.0, +1.0));
+        omega = omega_r * vec3(cos(omega_t) * sin(omega_p), sin(omega_t) * sin(omega_p), cos(omega_p));
+    }
+    else // hybrid
+    {
+        float omega_r = length(gp.omega_);
+        float omega_t = noise_prng_uniform(rng, 0.0, 2.0 * M_PI);
+        omega = omega_r * vec3(cos(omega_t), sin(omega_t), 0.0);
+    }
+    phi = noise_prng_uniform(rng, 0.0, 2.0 * M_PI);
 }
 
-// evaluate the summed contribution of all gabor impulses in the cell whose corner 
+// evaluate the summed contribution of all gabor impulses in the cell whose corner
 // is c_i. x_c_i is the vector from the point we are evaluating to the cell corner
 float gaborCell(const in noise_class gp, const in ivec3 c, const in vec3 x_c_i)
 {
-   const uint period = 256u;
-   uint seed = (((((uint(c[2]) % period) * period) + (uint(c[1]) % period)) * period) + (uint(c[0]) % period)) + gp.seed_; // periodic noise
-   if (seed == 0u) seed = 1u;
+    const uint period = 256u;
+    uint seed = (((((uint(c[2]) % period) * period) + (uint(c[1]) % period)) * period) + (uint(c[0]) % period)) + gp.seed_; // periodic noise
+    if (seed == 0u) seed = 1u;
 
-   noise_prng prng;
-   noise_prng_srand(prng, seed);
+    noise_prng prng;
+    noise_prng_srand(prng, seed);
 
-   uint n_impules = noise_prng_poisson(prng,(gp.lambda_ * (gp.radius_ * gp.radius_ * gp.radius_)));
-   float sum = 0;
-   for (uint i=0u; i < n_impules; ++i)
-   {
-      vec3 x_i_c = vec3(noise_prng_uniform_0_1(prng), noise_prng_uniform_0_1(prng), noise_prng_uniform_0_1(prng));
-      vec3 x_k_i = gp.radius_ * (x_c_i - x_i_c);
-      float phi_i; vec3 omega_i;
-      gaborSample(gp, prng, omega_i, phi_i);
-      if (dot(x_k_i, x_k_i) < gp.radius_ * gp.radius_)
-      {
-         // just do unfiltered gabor noise...
-         sum += gaborKernel2d(1.0f, omega_i, phi_i, gp.a_, x_k_i);
-      }
-   }
+    uint n_impules = noise_prng_poisson(prng,(gp.lambda_ * (gp.radius_ * gp.radius_ * gp.radius_)));
+    float sum = 0;
+    for (uint i=0u; i < n_impules; ++i)
+    {
+        vec3 x_i_c = vec3(noise_prng_uniform_0_1(prng), noise_prng_uniform_0_1(prng), noise_prng_uniform_0_1(prng));
+        vec3 x_k_i = gp.radius_ * (x_c_i - x_i_c);
+        float phi_i; vec3 omega_i;
+        gaborSample(gp, prng, omega_i, phi_i);
+        if (dot(x_k_i, x_k_i) < gp.radius_ * gp.radius_)
+        {
+            // just do unfiltered gabor noise...
+            sum += gaborKernel2d(1.0f, omega_i, phi_i, gp.a_, x_k_i);
+        }
+    }
 
     return sum;
 }
 
 float gaborGrid(const in noise_class gp, const in vec3 x_g)
 {
-   vec3 flooradius_x_g = floor(x_g);
-   vec3 x_c = x_g - flooradius_x_g;
-   float sum = 0;
+    vec3 flooradius_x_g = floor(x_g);
+    vec3 x_c = x_g - flooradius_x_g;
+    float sum = 0;
 
-   for (int k = -1; k <= 1; ++k)
-   {
-      for (int j = -1; j <= 1; ++j)
-      {
-         for (int i = -1; i <= 1; ++i)
-         {
-            vec3 c;
-            c =  vec3(i, j, k);
-            vec3 c_i = flooradius_x_g + c;
-            vec3 x_c_i = x_c - c;
+    for (int k = -1; k <= 1; ++k)
+    {
+        for (int j = -1; j <= 1; ++j)
+        {
+            for (int i = -1; i <= 1; ++i)
+            {
+                vec3 c;
+                c =  vec3(i, j, k);
+                vec3 c_i = flooradius_x_g + c;
+                vec3 x_c_i = x_c - c;
 
-            sum += gaborCell(gp, ivec3(c_i), x_c_i);
-         }
-      }
-   }    
+                sum += gaborCell(gp, ivec3(c_i), x_c_i);
+            }
+        }
+    }
     return sum / sqrt(gp.lambda_);
 }
 
 float gaborEvaluate(const in noise_class gp, const in vec3 x)
 {
-   vec3 x_g = x / gp.radius_;
-   return gaborGrid(gp, x_g);
+    vec3 x_g = x / gp.radius_;
+    return gaborGrid(gp, x_g);
 }
 
 float gaborVariance(const in noise_class gp)
 {
-  return (1.0 / (4.0 * sqrt(2.0) * (gp.a_ * gp.a_ * gp.a_)));
+    return (1.0 / (4.0 * sqrt(2.0) * (gp.a_ * gp.a_ * gp.a_)));
 }
 
 // gabor noise function
 vec4 DT3D_GaborNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, vec3 orientation, float bandwidth, float truncate, float impulses, int seeds, int typeSet)
 {
-   // point position in object space
-   vec3 P = Po * frequency; 
+    // point position in object space
+    vec3 P = Po * frequency;
 
-   float noise_frequency = 2.0f;//0.03125f;
-   vec3 noise_orientation = orientation;//vec3(1.0f, 0.0f, 0.0f);
-   float noise_bandwidth = bandwidth;//2.0f; //4.0
-   float noise_truncate = truncate;//0.01f; //0.1
-   float noise_impulses = impulses;//32.0f; //256
-   uint seed = uint(seeds);//1234u;
-   int type = typeSet;//1;
+    float noise_frequency = 2.0f;//0.03125f;
+    vec3 noise_orientation = orientation;//vec3(1.0f, 0.0f, 0.0f);
+    float noise_bandwidth = bandwidth;//2.0f; //4.0
+    float noise_truncate = truncate;//0.01f; //0.1
+    float noise_impulses = impulses;//32.0f; //256
+    uint seed = uint(seeds);//1234u;
+    int type = typeSet;//1;
 
-   vec3 omega = noise_frequency * noise_orientation;
-   float a = (noise_frequency * ((pow(2.0f, noise_bandwidth) - 1.0f) / (pow(2.0f, noise_bandwidth) + 1.0f))) * sqrt(M_PI / log(2.0f));
-   float r = sqrt(-log(noise_truncate) / M_PI) / a;
-   float lambda = noise_impulses / ((4.0f / 3.0f) * M_PI * (r * r * r));
+    vec3 omega = noise_frequency * noise_orientation;
+    float a = (noise_frequency * ((pow(2.0f, noise_bandwidth) - 1.0f) / (pow(2.0f, noise_bandwidth) + 1.0f))) * sqrt(M_PI / log(2.0f));
+    float r = sqrt(-log(noise_truncate) / M_PI) / a;
+    float lambda = noise_impulses / ((4.0f / 3.0f) * M_PI * (r * r * r));
 
-   noise_class n;
-   noise_constructor(n, lambda, r, seed, omega, a, type);
+    noise_class n;
+    noise_constructor(n, lambda, r, seed, omega, a, type);
 
-   float noise = gaborEvaluate(n,P);
+    float noise = gaborEvaluate(n,P);
 
-   float scale = 0.5 / (3.0 * sqrt(gaborVariance(n)));
-   float bias = 0.5;
-   float color = bias + (scale * noise);
+    float scale = 0.5 / (3.0 * sqrt(gaborVariance(n)));
+    float bias = 0.5;
+    float color = bias + (scale * noise);
 
-   // final output color result
-   vec4 resultColor = mix( colorA, colorB, color);
+    // final output color result
+    vec4 resultColor = mix( colorA, colorB, color);
 
-   return resultColor;
+    return resultColor;
 }

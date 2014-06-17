@@ -3,32 +3,52 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Mari Ideascale Procedural Library
 // Copyright (c) 2013 Jens Kafitz. All Rights Reserved.
-//////////////////////////////////////////////////////////////////////////////// 
-// File: ID_ProceduralLib.glslh 
-// Description: Procedural library for various procedural functions.
-////////////////////////////////////////////////////////////////////////////////                
-// Author: Jens Kafitz | Mari Ideascale
-// Web: www.campi3d.com      
-// Web: www.mari.ideascale.com         
-// Email: info@campi3d.com
-////////////////////////////////////////////////////////////////////////////////                                          
-// Date: Dec 20, 2013
 ////////////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify   
-// it under the terms of the GNU General Public License as published by   
-// the Free Software Foundation, either version 3 of the License, or    
-// (at your option) any later version.                    
-//                                      
-// This program is distributed in the hope that it will be useful,      
-// but WITHOUT ANY WARRANTY; without even the implied warranty of     
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the      
-// GNU General Public License for more details.               
-//                                      
-// You should have received a copy of the GNU General Public License    
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.  
+// File: ID_ProceduralLib.glslh
+// Description: Procedural library for various procedural functions.
+////////////////////////////////////////////////////////////////////////////////
+// Author: Jens Kafitz | Mari Ideascale
+// Web: www.campi3d.com
+// Web: www.mari.ideascale.com
+// Email: info@campi3d.com
+////////////////////////////////////////////////////////////////////////////////
+// Modified Date: June 14, 2014
+////////////////////////////////////////////////////////////////////////////////
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+// ADVISED OF HE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////
 
-// forward declarations from other include functions
+// include files
+//
+//! include | Surface.glslh
+
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// forward declarations from other library functions
 //
 // perlin noise
 float Perlin3D( vec3 P );
@@ -38,195 +58,289 @@ float SimplexPerlin3D(vec3 P);
 vec4 mriRgb2Hsv(vec4 colorIn);
 // hsv to rgb
 vec4 mriHsv2Rgb(vec4 colorIn);
+//
+////////////////////////////////////////////////////////////////////////////////
 
-// box filtered step function 
-// the boxstep function is somewhere between step and smoothstep. 
-// it is the result of the convolution of a box filter with a step edge. 
+// box filtered step function
+// the boxstep function is somewhere between step and smoothstep.
+// it is the result of the convolution of a box filter with a step edge.
 float boxStep(float low, float high, float value)
 {
-	float tmp = (value - low) / (high -  low);
-	float clmp = clamp(tmp,0.0,1.0);
-	return clmp;
+    float tmp = (value - low) / (high -  low);
+    float clmp = clamp(tmp,0.0,1.0);
+    return clmp;
 }
 
 // smooth function
 float rsmooth(float x, float a_n, float b_n)
 {
-	float _smooth = smoothstep(0.0,1.0,x);
-	_smooth *= mix(mix(smoothstep(-a_n-1.0, -a_n, -x), boxStep(-a_n-1.0,-a_n, -x), b_n),
-			 mix(boxStep(-a_n-2.0,-a_n-1.0,-x), smoothstep(-a_n-2.0,-a_n-1.0,-x),b_n),b_n);
-	return _smooth;
+    float _smooth = smoothstep(0.0,1.0,x);
+    _smooth *= mix(mix(smoothstep(-a_n-1.0, -a_n, -x), boxStep(-a_n-1.0,-a_n, -x), b_n),
+             mix(boxStep(-a_n-2.0,-a_n-1.0,-x), smoothstep(-a_n-2.0,-a_n-1.0,-x),b_n),b_n);
+    return _smooth;
 }
 
 // frequency smoothing function
 float freqSmooth(float d, float x, float a_n, float b_n)
 {
-	float tmp = floor(x)-mod(x,1.0);
-	float tmp_n = rsmooth(tmp+1.0,a_n,b_n)*pow(d,tmp);
-	return tmp_n;
+    float tmp = floor(x)-mod(x,1.0);
+    float tmp_n = rsmooth(tmp+1.0,a_n,b_n)*pow(d,tmp);
+    return tmp_n;
 }
 
 //   soft threshold float,vec4
-//   inputs: 
+//   inputs:
 //   value/color    input to compute
 //   threshold      the pivot value
 //   bound          a value that is added and subtracted from the pivot
 //threshold function for the given float value with a feather value
 float softThreshold(float threshold, float bound, float value)
 {
-	float bounds = bound;
-	float edgeH = threshold + bounds;
-	float edgeL = threshold - bounds;
+    float bounds = bound;
+    float edgeH = threshold + bounds;
+    float edgeL = threshold - bounds;
 
-	float result = smoothstep(edgeL,edgeH,value);
+    float result = smoothstep(edgeL,edgeH,value);
 
-	return result;
+    return result;
 }
 
 // threshold function for the given vec4 with a feather value
 vec4 softThreshold(float threshold, float bound, vec4 colorInput)
 {
-	vec4 colThreshold = vec4(threshold,threshold,threshold,1.0);
-	vec4 bounds = vec4(bound,bound,bound,1.0);
-	vec4 edgeH = colThreshold + bounds;
-	vec4 edgeL = colThreshold - bounds;
-	vec4 value = mriRgb2Hsv(colorInput);
-	value = vec4(value.r,0,value.b,1);
-	value = mriHsv2Rgb(value);
+    vec4 colThreshold = vec4(threshold,threshold,threshold,1.0);
+    vec4 bounds = vec4(bound,bound,bound,1.0);
+    vec4 edgeH = colThreshold + bounds;
+    vec4 edgeL = colThreshold - bounds;
+    vec4 value = mriRgb2Hsv(colorInput);
+    value = vec4(value.r,0,value.b,1);
+    value = mriHsv2Rgb(value);
 
-	vec4 result = smoothstep(edgeL,edgeH,value);
-	vec4 resultAlpha = vec4(result.r,result.g,result.b,1.0);
-	return resultAlpha;
+    vec4 result = smoothstep(edgeL,edgeH,value);
+    vec4 resultAlpha = vec4(result.r,result.g,result.b,1.0);
+    return resultAlpha;
 }
 
 // remap function for float
 float remap(float value, float oldMin, float oldMax, float newMin, float newMax, float multiplier)
-{ 
-	float old = (value - oldMin) / (oldMax - oldMin);
-	float new = ((newMax - newMin) * old) + newMin ;
-	float scale = (new * multiplier);
-	return scale;
+{
+    float old = (value - oldMin) / (oldMax - oldMin);
+    float new = ((newMax - newMin) * old) + newMin ;
+    float scale = (new * multiplier);
+    return scale;
 }
 
 // remap function for color vec4 (color with alpha)
-vec4 remap(vec4 value, float oldMin, float oldMax, float newMin, float newMax, float multiplier)
+vec4 remap(vec4 value, vec4 oldMin, vec4 oldMax, vec4 newMin, vec4 newMax, vec4 multiplier)
 {
-	vec4 old = (value - oldMin) / (oldMax - oldMin);
-	vec4 new = ((newMax - newMin) * old) + newMin ;
-	vec4 scale = vec4(new * multiplier);
-	return scale;
+    vec4 old = (value - oldMin) / (oldMax - oldMin);
+    vec4 new = ((newMax - newMin) * old) + newMin ;
+    vec4 scale = vec4(new * multiplier);
+    return scale;
 }
 
 // remap function for color vec3
-vec3 remap(vec3 value, float oldMin, float oldMax, float newMin, float newMax, float multiplier)
+vec3 remap(vec3 value, vec3 oldMin, vec3 oldMax, vec3 newMin, vec3 newMax, vec3 multiplier)
 {
-	vec3 old = (value - oldMin) / (oldMax - oldMin);
-	vec3 new = ((newMax - newMin) * old) + newMin ;
-	vec3 scale = vec3(new * multiplier);
-	return scale;
+    vec3 old = (value - oldMin) / (oldMax - oldMin);
+    vec3 new = ((newMax - newMin) * old) + newMin ;
+    vec3 scale = vec3(new * multiplier);
+    return scale;
 }
 
 // -----------------------------------------------------------------------------
 // based on noises.h by larry gritz, advanced renderman
-
 // vsnoise(P) - vector-valued perlin noise on 3-d domain.
 float vsnoise(vec3 P)
 {
-	float tmp = (2.0 * (Perlin3D(P)) - 1.0);
-	return tmp;
+    float tmp = (2.0 * (Perlin3D(P)) - 1.0);
+    return tmp;
 }
 
 // the stuff that ken musgrave calls "vlnoise"
 float vlnoise (vec3 P, float scale)
 {
-	float tmp = (Perlin3D(vsnoise(P)*scale+P)) ;
-	return tmp;
+    float tmp = (Perlin3D(vsnoise(P)*scale+P)) ;
+    return tmp;
 }
 
 // fbm inplementation
 // very similar to smoothfbm but in-values are not post-processed as much
 float rmfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float freqOffset)
 {
-	vec3 pp = P;
-	float sum = 0.0;
-	float i;
-	float o1_n = floor(octaves);
-	float o2_n = mod(octaves,1.0);
-	float mo = mod(freqOffset,1.0);
-	float lac;
-	
-	float amp_n = 1.0;
-	for ( i = 0.0;  i < (o1_n+2.0);  i += 1.0) 
-	{
-		// amp_n = amp;
-		amp_n = (freqSmooth(amp, i+mo, o1_n, o2_n)*gain); 
-		pp *= lacunarity;
-		sum += amp_n * SimplexPerlin3D(pp);
-	}
-	return sum;
+    vec3 pp = P;
+    float sum = 0.0;
+    float i;
+    float o1_n = floor(octaves);
+    float o2_n = mod(octaves,1.0);
+    float mo = mod(freqOffset,1.0);
+    float lac;
+
+    float amp_n = 1.0;
+    for ( i = 0.0;  i < (o1_n+2.0);  i += 1.0)
+    {
+        // amp_n = amp;
+        amp_n = (freqSmooth(amp, i+mo, o1_n, o2_n)*gain);
+        pp *= lacunarity;
+        sum += amp_n * SimplexPerlin3D(pp);
+    }
+    return sum;
 }
 
 // vlfbm - classic vector fbm
 float vlfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float scale)
 {
-	vec3 pp = P;
-	float sum = 0.0;
-	float i;
-	float a_n = floor(octaves);
+    vec3 pp = P;
+    float sum = 0.0;
+    float i;
+    float a_n = floor(octaves);
 
-	for (i = 0.0;  i < a_n;  i += 1.0) 
-	{
-		sum += amp * vlnoise(pp,scale);
-		amp *= gain;  
-		pp *= lacunarity;
-	}
-	return sum;
+    for (i = 0.0;  i < a_n;  i += 1.0)
+    {
+        sum += amp * vlnoise(pp,scale);
+        amp *= gain;
+        pp *= lacunarity;
+    }
+    return sum;
 }
 
 // smoothed fbm inplementation
 // most incoming values are smoothed so this function is suitable for non-constant in-values.
 float smoothfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float freqOffset)
 {
-	vec3 pp = P;
-	float sum = 0.0;
-	float i;
-	float o1_n = floor(octaves);
-	float o2_n = mod(octaves,1.0);
-	float _freqOffset = rsmooth(abs(freqOffset),0.0,1.0);
-	float mo = mod(_freqOffset,1.0);
-	float lac;
-	float amp_n = 1.0;
+    vec3 pp = P;
+    float sum = 0.0;
+    float i;
+    float o1_n = floor(octaves);
+    float o2_n = mod(octaves,1.0);
+    float _freqOffset = rsmooth(abs(freqOffset),0.0,1.0);
+    float mo = mod(_freqOffset,1.0);
+    float lac;
+    float amp_n = 1.0;
 
-	for ( i = 0.0;  i < (o1_n+2.0);  i += 1.0) 
-	{
-		amp_n = (freqSmooth(amp, i+mo, o1_n, o2_n)*gain);
-		pp += freqSmooth(lacunarity, i+mo, o1_n, o2_n);  
-		pp *= lacunarity;
-		sum += amp_n * SimplexPerlin3D(pp);
-	}
-	return sum;
+    for ( i = 0.0;  i < (o1_n+2.0);  i += 1.0)
+    {
+        amp_n = (freqSmooth(amp, i+mo, o1_n, o2_n)*gain);
+        pp += freqSmooth(lacunarity, i+mo, o1_n, o2_n);
+        pp *= lacunarity;
+        sum += amp_n * SimplexPerlin3D(pp);
+    }
+    return sum;
 }
 
 // smoothvlfBm
 // most incoming values are smoothed so this function is suitable for non-constant in-values.
 float smoothVfBm (vec3 P, float octaves, float lacunarity, float gain, float amp, float scale, float freqOffset)
 {
-	vec3 pp = P;
-	float sum = 0.0;
-	float i;
-	float o1_n = floor(octaves);
-	float o2_n = mod(octaves,1.0);
-	float _freqOffset = rsmooth(abs(freqOffset),0.0,1.0);
-	float mo = mod(_freqOffset,1.0);
-	
-	// float lac;
-	float amp_n = 1.0;
-	for ( i = 0.0;  i < (o1_n+2.0);  i += 1.0) 
-	{
-		amp_n = (freqSmooth(amp, i+mo, o1_n, o2_n)*gain);
-		pp += freqSmooth(lacunarity, i+mo, o1_n, o2_n);
-		pp *= lacunarity;  
-		sum += amp_n *vlnoise(pp,scale);
-	}
-	return sum;
+    vec3 pp = P;
+    float sum = 0.0;
+    float i;
+    float o1_n = floor(octaves);
+    float o2_n = mod(octaves,1.0);
+    float _freqOffset = rsmooth(abs(freqOffset),0.0,1.0);
+    float mo = mod(_freqOffset,1.0);
+
+    // float lac;
+    float amp_n = 1.0;
+    for ( i = 0.0;  i < (o1_n+2.0);  i += 1.0)
+    {
+        amp_n = (freqSmooth(amp, i+mo, o1_n, o2_n)*gain);
+        pp += freqSmooth(lacunarity, i+mo, o1_n, o2_n);
+        pp *= lacunarity;
+        sum += amp_n *vlnoise(pp,scale);
+    }
+    return sum;
 }
+
+// patchcoord
+// returns one offset coordinate per patch/udim
+// useful for example to set pivots per patch
+// x and y represent offsets from the default coordinate (lower left corner of each patch)
+vec2 patchCoord( vec2 uv, float x, float y)
+{
+    vec2 patchPivot;
+    vec2 pivot = vec2(-x,-y);
+
+    // generate udim number per patch
+    int _udim_id = (int(floor(uv.s)) + int(floor(uv.t)) *10 + 1001);
+
+    // generate main offset coordinate based on udim
+    int uCo =  ((_udim_id-1000)%10);
+
+    if (uCo == 0)
+    {
+        uCo = 10;
+    }
+
+    uCo -= 1;
+
+    int vCo =  ((_udim_id-1000)/10);
+
+    // generate offset coordinate with user defined per patch pivot
+    patchPivot =   pivot - vec2(uCo,vCo);
+
+    return patchPivot;
+}
+
+// compute the uv rotation matrix
+mat2 nb_uvRotation(float angle)
+{
+   // uv rotation matrix
+   float rotRads = radians(angle);
+   float cosAngle = cos(rotRads);
+   float sinAngle = sin(rotRads);
+   mat2 rotationMatrix = mat2(cosAngle,-sinAngle,sinAngle,cosAngle);
+
+   // uv matrix
+   return rotationMatrix;
+}
+
+// patchRotate
+// Rotates the UVs per Patch, feed in State.UV ( no fract() )
+// pivotU and pivotV can be used to set rotational pivot on a patch (corner, center)
+vec2 patchRotate(vec2 uvCoord, float angle, float pivotU, float pivotV)
+{
+    vec2 patchRotation;
+
+    // generate rotationmatrix
+    mat2 rotationMatrix = nb_uvRotation(angle);
+
+    // generate offsetcoordinate with user defined per patch pivot
+    vec2 offsetToCenter =   patchCoord(uvCoord,pivotU,pivotV);
+
+
+    // perform offset and rotation
+    patchRotation = uvCoord + offsetToCenter;
+    patchRotation = rotationMatrix * patchRotation;
+
+    // reset offset
+    patchRotation = patchRotation - offsetToCenter;
+
+    return patchRotation;
+}
+
+// relUVTransform
+// performs all uv transformation based on a pivot defined per udim
+vec2 relUVTransform(vec2 uvCoord, float RotationAngle, vec2 Offset, vec2 Repeat, float pivotU, float pivotV)
+{
+    vec2 relativeUVTransform;
+
+    // generate offset coordinate with user defined per patch pivot
+    vec2 offsetToCenter =   patchCoord(uvCoord,pivotU,pivotV);
+
+    // generate rotationmatrix
+    mat2 rotationMatrix = nb_uvRotation(RotationAngle);
+
+    // perform offset and rotation
+    relativeUVTransform = uvCoord + offsetToCenter;
+    relativeUVTransform = rotationMatrix * relativeUVTransform;
+
+    // perform scale,repeat
+    relativeUVTransform *= Repeat;
+
+    // reset offset
+    relativeUVTransform = relativeUVTransform - offsetToCenter + Offset;
+
+    return relativeUVTransform;
+}
+

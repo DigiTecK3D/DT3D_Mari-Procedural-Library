@@ -1,55 +1,124 @@
+<!--
+================================================================================
+== DigiTecK3D Procedural Shader Library
+== Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
+================================================================================
+== File: DT3D_RidgedMultiNoise.xml
+== Description: Multi ridged procedural noise node.
+================================================================================
+== Author: Miguel A Santiago Jr.
+== Web: www.digiteck3d.com
+== Email: miguel@digiteck3d.com
+================================================================================
+== Modified Date: June, 15 2014
+================================================================================
+== Redistribution and use in source and binary forms, with or without
+== modification, are permitted provided that the following conditions are met:
+==
+== 1. Redistributions of source code must retain the above copyright
+== notice, this list of conditions and the following disclaimer.
+==
+== 2. Redistributions in binary form must reproduce the above copyright
+== notice, this list of conditions and the following disclaimer in the
+== documentation and/or other materials provided with the distribution.
+==
+== 3. Neither the name of the copyright holder nor the names of its
+== contributors may be used to endorse or promote products derived from
+== this software without specific prior written permission.
+==
+== THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+== IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+== THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+== PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+== CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+== EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+== PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+== OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+== WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+== OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+== ADVISED OF HE POSSIBILITY OF SUCH DAMAGE.
+================================================================================
+-->
+
 <Node>
-  <ID>Ridged Multi Noise</ID>
-  <Category>Procedural/Custom/MultiFractal/</Category>
+    <ID>Ridged Multi Noise</ID>
+    <DefaultName>Ridged Multi Noise</DefaultName>
+    <Category>Procedural/Custom/MultiFractal/</Category>
     <Inputs>
         <Input Name="Input"></Input>
     </Inputs>
     <Attributes>
-		<Attribute Name="colorA" PrettyName="Color A" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(0,0,0,1)</Attribute>
-		<Attribute Name="colorB" PrettyName="Color B" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(1,1,1,1)</Attribute>
-		<Attribute Name="frequency" PrettyName="Frequency" Group="Scale" Type="float" Min="1" Max="10" Logarithmic="1">2</Attribute>
-		<Attribute Name="Seed" PrettyName="Seed" Group="Scale" Type="double" Min="1" Max="100000" Logarithmic="1">1</Attribute> 
-		<Attribute Name="octaves" PrettyName="Octaves" Group="Modifiers" Type="int" Min="1" Max="10" Logarithmic="1">6</Attribute>
-		<Attribute Name="lacunarity" PrettyName="Lacunarity" Group="Modifiers" Type="float" Min="0" Max="10" >1.5</Attribute>
-		<Attribute Name="gain" PrettyName="Gain" Group="Modifiers" Type="float" Min="0" Max="1" >0.2</Attribute>
-		<Attribute Name="offset" PrettyName="Offset" Group="Modifiers" Type="float" Min="0" Max="1" >0.8</Attribute>
-		<Attribute Name="threshold" PrettyName="Threshold" Group="Modifiers" Type="float" Min="0" Max="1" >0.5</Attribute>
-		<Attribute Name="invert" PrettyName="Invert" Group="Modifiers" Type="bool" Min="false" Max="true">false</Attribute>
-		<Attribute Name="transX" PrettyName="TranslateX" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
-		<Attribute Name="transY" PrettyName="TranslateY" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
-		<Attribute Name="transZ" PrettyName="TranslateZ" Group="Transform" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
-		<Attribute Name="rotateX" PrettyName="Rotate X" Group="Transform Rotate" Type="float" Min="0" Max="360" Logarithmic="1">0</Attribute>
-		<Attribute Name="rotateY" PrettyName="Rotate Y" Group="Transform Rotate" Type="float" Min="0" Max="360" Logarithmic="1">0</Attribute>
-		<Attribute Name="rotateZ" PrettyName="Rotate Z" Group="Transform Rotate" Type="float" Min="0" Max="360" Logarithmic="1">0</Attribute>
-		<Attribute Name="scaleX" PrettyName="Scale X" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
-		<Attribute Name="scaleY" PrettyName="Scale Y" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
-		<Attribute Name="scaleZ" PrettyName="Scale Z" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
+        <!--===============================================================================================================-->
+        <Attribute Name="colorA" PrettyName="Color A" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(0,0,0,1)</Attribute>
+        <Attribute Name="colorB" PrettyName="Color B" Group="Color" Type="color" Min="(0,0,0,1)" Max="(1,1,1,1)">(1,1,1,1)</Attribute>
+        <!--===============================================================================================================-->
+        <Attribute Name="frequency" PrettyName="Frequency" Group="Size" Type="float" Min="1" Max="10" Logarithmic="1">2</Attribute>
+        <Attribute Name="Seed" PrettyName="Seed" Group="Size" Type="double" Min="1" Max="100000" Logarithmic="1">1</Attribute>
+        <!--===============================================================================================================-->
+        <Attribute Name="octaves" PrettyName="Octaves" Group="Modifiers" Type="int" Min="1" Max="10" Logarithmic="1">6</Attribute>
+        <Attribute Name="lacunarity" PrettyName="Lacunarity" Group="Modifiers" Type="float" Min="0" Max="10" >1.5</Attribute>
+        <Attribute Name="gain" PrettyName="Gain" Group="Modifiers" Type="float" Min="0" Max="1" >0.2</Attribute>
+        <Attribute Name="offset" PrettyName="Offset" Group="Modifiers" Type="float" Min="0" Max="1" >0.8</Attribute>
+        <Attribute Name="threshold" PrettyName="Threshold" Group="Modifiers" Type="float" Min="0" Max="1" >0.5</Attribute>
+        <Attribute Name="invert" PrettyName="Invert" Group="Modifiers" Type="bool" Min="false" Max="true">false</Attribute>
+        <!--===============================================================================================================-->
+        <Attribute Name="uv" PrettyName="UV Space" Group="Space" Type="bool" Min="false" Max="true" Description="Runs the noise 2d uv based, use offset/scale x/y and rotate z" >false</Attribute>
+        <!--===============================================================================================================-->
+        <Attribute Name="scaleX" PrettyName="Scale X" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
+        <Attribute Name="scaleY" PrettyName="Scale Y" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
+        <Attribute Name="scaleZ" PrettyName="Scale Z" Group="Transform Scale" Type="float" Min="0" Max="100" Logarithmic="1">1</Attribute>
+        <!--===============================================================================================================-->
+        <Attribute Name="rotateX" PrettyName="Rotate X" Group="Transform Rotate" Type="float" Min="0" Max="360">0</Attribute>
+        <Attribute Name="rotateY" PrettyName="Rotate Y" Group="Transform Rotate" Type="float" Min="0" Max="360">0</Attribute>
+        <Attribute Name="rotateZ" PrettyName="Rotate Z" Group="Transform Rotate" Type="float" Min="0" Max="360">0</Attribute>
+        <!--===============================================================================================================-->
+        <Attribute Name="transX" PrettyName="TranslateX" Group="Transform Translate" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
+        <Attribute Name="transY" PrettyName="TranslateY" Group="Transform Translate" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
+        <Attribute Name="transZ" PrettyName="TranslateZ" Group="Transform Translate" Type="float" Min="0" Max="100" Logarithmic="1">0</Attribute>
+        <!--===============================================================================================================-->
     </Attributes>
-  <Contexts>
-    <Context Type="GLSL">
-        <Shader>
-            <Inputs>
-                <Input Name="Input"><Default>vec4(1,1,1,1)</Default></Input>
-            </Inputs>
-            <Body><![CDATA[
-			
-			// compensate for scene size by applying eponential growth
-    		float freq_pow = (pow($frequency,$frequency)-1.0) + 0.01;
+    <Groups>
+        <Group Name="Space" Expanded="false"></Group>
+        <Group Name="Transform Scale" Expanded="false"></Group>
+        <Group Name="Transform Rotate" Expanded="false"></Group>
+        <Group Name="Transform Translate" Expanded="false"></Group>
+    </Groups>
+    <Contexts>
+        <Context Type="GLSL">
+            <Shader>
+                <Inputs>
+                    <Input Name="Input"><Default>vec4(1,1,1,1)</Default></Input>
+                </Inputs>
+                <Body><![CDATA[
 
+                // compensate for scene size by applying eponential growth
+                float freq_pow = (pow($frequency,$frequency)-1.0) + 0.01;
 
-			// build the needed vector attributes for position transform, offset max growths exponentiall
-			vec3 trans = (vec3($transX,$transY,$transZ)*freq_pow) + vec3($Seed);
-			vec3 rotate = vec3($rotateX,$rotateY,$rotateZ);
-			vec3 scale = vec3($scaleX,$scaleY,$scaleZ);
-			
-			// transform the position to translate,rotate,scale the position
-			vec3 P = positionTransform(State.Position,trans,rotate,scale) / freq_pow;
-			
-			// perlin noise function
-            Output = DT3D_RidgedNoise(P,$colorA,$colorB,$frequency,$octaves,$lacunarity,1.0-$gain,$offset,$threshold,$invert);
-			
-            ]]></Body>
-        </Shader>
-    </Context>
-  </Contexts>
+                // 3d space surface position
+                // build the needed vector attributes for position transform, offset max growths exponentially
+                vec3 trans = (vec3($transX,$transY,$transZ)*freq_pow) + vec3($Seed);
+                vec3 rotate = vec3($rotateX,$rotateY,$rotateZ);
+                vec3 scale = vec3($scaleX,$scaleY,$scaleZ);
+
+                // transform the position to translate,rotate,scale the position
+                vec3 P = positionTransform(State.Position,trans,rotate,scale) / freq_pow;
+
+                // 2d uv space surface position
+                // build the needed vector attributes for position transform, offset max growths exponentially
+                vec2 UVOffset = vec2($transX,$transY) + vec2($Seed);
+                vec2 UVScale = vec2($scaleX,$scaleY);
+
+                // transform the position to translate,rotate,scale the position
+                vec2 InputScaleUV = relUVTransform(State.UV,$rotateZ,UVOffset,UVScale,0.5,0.5) / (freq_pow);
+
+                // blend between 2d and 3d space position
+                P = mix(P,vec3(InputScaleUV,1.0),float($uv));
+
+                // ridged noise function
+                Output = DT3D_RidgedNoise(P,$colorA,$colorB,$frequency,$octaves,$lacunarity,1.0-$gain,$offset,$threshold,$invert);
+
+                ]]></Body>
+            </Shader>
+        </Context>
+    </Contexts>
 </Node>

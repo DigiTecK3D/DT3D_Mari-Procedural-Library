@@ -1,30 +1,85 @@
 ////////////////////////////////////////////////////////////////////////////////
-// DigiTecK3D Procedural Shader Library Registration
+// DigiTecK3D Procedural Shader Library
 // Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
-//////////////////////////////////////////////////////////////////////////////// 
-// File: DT3D_CellularNoiseLib.glslh	
+////////////////////////////////////////////////////////////////////////////////
+// File: DT3D_CellularNoiseLib.glslh
 // Description: Cellular noise library for the cellular noise funciton.
 ////////////////////////////////////////////////////////////////////////////////
-// Author: Miguel A Santiago Jr.       	
-// Web: www.digiteck3d.com				
+// Author: Miguel A Santiago Jr.
+// Web: www.digiteck3d.com
 // Email: miguel@digiteck3d.com
 ////////////////////////////////////////////////////////////////////////////////
-// Date: Dec 20, 2013
+// Modified Date: June 14, 2014
 ////////////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify		
-// it under the terms of the GNU General Public License as published by		
-// the Free Software Foundation, either version 3 of the License, or		
-// (at your option) any later version.										
-//																			
-// This program is distributed in the hope that it will be useful,			
-// but WITHOUT ANY WARRANTY; without even the implied warranty of			
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the			
-// GNU General Public License for more details.								
-//																			
-// You should have received a copy of the GNU General Public License		
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.	
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+// ADVISED OF HE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////
 
+// random float generator [0,1]
+float rnd_1d(vec2 x);
+
+// distance squared
+float dist_Squared(float x, float y, float z);
+
+// real distance
+float dist_Real(float x, float y, float z);
+
+// quadratic distance
+float dist_Quadratic(float x, float y, float z);
+
+// manhattan/taxicab/cityblock distance
+float dist_Manhattan(float x, float y, float z);
+
+// chebychev
+float dist_Chebychev(float x, float y, float z);
+
+// minkowski preset exponent 0.5
+float dist_MinkovskyH(float x, float y, float z);
+
+// minkowski preset exponent 4
+float dist_Minkovsky4(float x, float y, float z);
+
+// minkowski, general case, slow, maybe too slow to be useful
+// exp = 0.5f MinkovskyH, exp = 1.0f Manhattan, exp = 2.3f Squared
+// exp = 4.0f Minkovsky4, exp = 20.0f Chebychev
+float dist_Minkovsky(float x, float y, float z, float e);
+
+// signed value of input
+float signedValue(float f2f1);
+
+// cosine value of input
+float cosineValue(float f2f1);
+
+// voronoi outline crack pattern
+float voronoiStep(float f2f1, float stepsize, vec3 pos1, vec3 pos2, vec3 pp);
+
+// voronoi cellular pattern generator
+void voronoi(vec3 position, float jitterD, int distype, out float f1, out float f2, out vec3 pos1,
+		     out vec3 pos2, out vec3 f1cell, out vec3 f2cell);
+
 // voronoi cellular pattern
-vec4 DT3D_CellularNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, float jitter, float stepSize, 
+vec4 DT3D_CellularNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, float jitter, float stepSize,
 						float threshold, bool invert, int outSet, int distSet, int modSet);

@@ -1,30 +1,43 @@
 #version 150
 
 ////////////////////////////////////////////////////////////////////////////////
-// DigiTecK3D Procedural Shader Library Registration
+// DigiTecK3D Procedural Shader Library
 // Copyright (c) 2013 DigiTecK3D. All Rights Reserved.
-//////////////////////////////////////////////////////////////////////////////// 
-// File: DT3D_ProceduralLib.glslc	
+////////////////////////////////////////////////////////////////////////////////
+// File: DT3D_ProceduralLib.glslc
 // Description: Procedural library for various procedural functions.
 ////////////////////////////////////////////////////////////////////////////////
-// Author: Miguel A Santiago Jr.       	
-// Web: www.digiteck3d.com				
+// Author: Miguel A Santiago Jr.
+// Web: www.digiteck3d.com
 // Email: miguel@digiteck3d.com
 ////////////////////////////////////////////////////////////////////////////////
-// Date: Dec 20, 2013
+// Modified Date: June 14, 2014
 ////////////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify		
-// it under the terms of the GNU General Public License as published by		
-// the Free Software Foundation, either version 3 of the License, or		
-// (at your option) any later version.										
-//																			
-// This program is distributed in the hope that it will be useful,			
-// but WITHOUT ANY WARRANTY; without even the implied warranty of			
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the			
-// GNU General Public License for more details.								
-//																			
-// You should have received a copy of the GNU General Public License		
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.	
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+// ADVISED OF HE POSSIBILITY OF SUCH DAMAGE.
 ////////////////////////////////////////////////////////////////////////////////
 
 // forward declarations from other include functions
@@ -44,119 +57,119 @@ float NoiseType(vec3 p, int type);
 // translate the position point in xyz
 vec3 translate( vec3 P, vec3 trans)
 {
-	// translate position xyz
-	P.x -= trans.x;P.y -= trans.y;P.z -= trans.z;
-	return P;
+    // translate position xyz
+    P.x -= trans.x;P.y -= trans.y;P.z -= trans.z;
+    return P;
 }
 
-// build a rotation matrix in the 
-// desired axis to multiply the position point 
+// build a rotation matrix in the
+// desired axis to multiply the position point
 mat3 rotation(float angle, vec3 axis)
 {
-	float Pi = 3.1415926538979;
-	float radian = Pi/180.0;
-	angle = angle * radian;
+    float Pi = 3.1415926538979;
+    float radian = Pi/180.0;
+    angle = angle * radian;
 
-	float cosa = cos(angle);
-	float inv = 1.0-cos(angle);
-	float sina = sin(angle);
+    float cosa = cos(angle);
+    float inv = 1.0-cos(angle);
+    float sina = sin(angle);
 
-	return mat3(
-	cosa + axis.x * axis.x * inv, axis.x * axis.y * inv - axis.z * sina, axis.x * axis.z * inv + axis.y * sina,
-	axis.y * axis.z * inv + axis.z * sina, cosa + axis.y * axis.y * inv, axis.y * axis.z * inv - axis.x * sina,
-	axis.z * axis.x * inv - axis.y * sina, axis.z * axis.y * inv + axis.x * sina, cosa + axis.z * axis.z * inv
-	);
+    return mat3(
+    cosa + axis.x * axis.x * inv, axis.x * axis.y * inv - axis.z * sina, axis.x * axis.z * inv + axis.y * sina,
+    axis.y * axis.z * inv + axis.z * sina, cosa + axis.y * axis.y * inv, axis.y * axis.z * inv - axis.x * sina,
+    axis.z * axis.x * inv - axis.y * sina, axis.z * axis.y * inv + axis.x * sina, cosa + axis.z * axis.z * inv
+    );
 }
 
 // scale the position point in xyz
 vec3 scale( vec3 P, vec3 scale)
 {
-	// scale position xyz
-	P.x *= scale.x;P.y *= scale.y;P.z *= scale.z;
-	return P;
+    // scale position xyz
+    P.x *= scale.x;P.y *= scale.y;P.z *= scale.z;
+    return P;
 }
 
-// tranform the position with translate,scale,rotation 
+// tranform the position with translate,scale,rotation
 vec3 positionTransform(vec3 P, vec3 Trans, vec3 Rot, vec3 Scale)
 {
-	// build the rotation matrix for the xyz
-	mat3 rotx = rotation(Rot.x,vec3(1.0,0.0,0.0));
-	mat3 roty = rotation(Rot.y,vec3(0.0,1.0,0.0));
-	mat3 rotz = rotation(Rot.z,vec3(0.0,0.0,1.0));
+    // build the rotation matrix for the xyz
+    mat3 rotx = rotation(Rot.x,vec3(1.0,0.0,0.0));
+    mat3 roty = rotation(Rot.y,vec3(0.0,1.0,0.0));
+    mat3 rotz = rotation(Rot.z,vec3(0.0,0.0,1.0));
 
-	// apply the xyz rotation matrix
-	P = P * (rotx * roty * rotz);
+    // apply the xyz rotation matrix
+    P = P * (rotx * roty * rotz);
 
-	// translate and scale the position point
-	P = scale(translate(P,Trans),Scale);
+    // translate and scale the position point
+    P = scale(translate(P,Trans),Scale);
 
-	return P; // return modified position
+    return P; // return modified position
 }
 
-// bias function on a given value 
+// bias function on a given value
 float pxslBias( float bias, float value )
 {
-	float tb = value / ((1.0/max(bias,1e-4) - 2.0) * (1.0 - value) + 1.0);
-	return tb; // return the bias value
+    float tb = value / ((1.0/max(bias,1e-4) - 2.0) * (1.0 - value) + 1.0);
+    return tb; // return the bias value
 }
 
 // gain function on a given value
 float pxslGain( float gain, float value )
 {
-	float tg;
-	gain = clamp(gain, 0.0001, 0.9999);
+    float tg;
+    gain = clamp(gain, 0.0001, 0.9999);
 
-	if( value < 0.5 )
-	{
-		tg = value / ((1.0/gain - 2.0) * (1.0 - 2.0 * value) + 1.0);
-	}
-	else
-	{
-		tg = ((1.0/gain - 2.0) * (1.0 - 2.0 * value) - value) /
-			 ((1.0/gain - 2.0) * (1.0 - 2.0 * value) - 1.0);
-	}
-	return tg; // return the gain value
+    if( value < 0.5 )
+    {
+        tg = value / ((1.0/gain - 2.0) * (1.0 - 2.0 * value) + 1.0);
+    }
+    else
+    {
+        tg = ((1.0/gain - 2.0) * (1.0 - 2.0 * value) - value) /
+             ((1.0/gain - 2.0) * (1.0 - 2.0 * value) - 1.0);
+    }
+    return tg; // return the gain value
 }
 
 // threshold function for the given value
 float pxslThreshold(float threshold, float value)
 {
-	return clamp((value - threshold) / (1.0 - threshold),0.0,1.0);
+    return clamp((value - threshold) / (1.0 - threshold),0.0,1.0);
 }
 
-// a anti-aliased version of step for procedurals  
+// a anti-aliased version of step for procedurals
 // 'threshold' is constant , 'value' is smoothly varying
 /*float aastep(float threshold , float value)
 {
-	float afwidth = 0.7 * fwidth(value);
-	// glsl's fwidth (value) is abs(dFdx(value)) + abs(dFdy(value))
-	return smoothstep(threshold - afwidth , threshold + afwidth , value);
+    float afwidth = 0.7 * fwidth(value);
+    // glsl's fwidth (value) is abs(dFdx(value)) + abs(dFdy(value))
+    return smoothstep(threshold - afwidth , threshold + afwidth , value);
 }*/
 
 // vector noise function range of -1.0->1.0
 vec3 vnoise(vec3 P)
 {
-	float a,b,c; vec3 pa,pb;
-	// xyz noise vectors 
-	a = NoiseType(P + vec3(1.56,2.32,8.53),1);
-	b = NoiseType(P + vec3(19.34,7.66,3.23),1);
-	c = NoiseType(P + vec3(5.47,17.85,11.04),1);
+    float a,b,c; vec3 pa,pb;
+    // xyz noise vectors
+    a = NoiseType(P + vec3(1.56,2.32,8.53),1);
+    b = NoiseType(P + vec3(19.34,7.66,3.23),1);
+    c = NoiseType(P + vec3(5.47,17.85,11.04),1);
 
-	return vec3(a,b,c); // build vector noise
+    return vec3(a,b,c); // build vector noise
 }
 
 // ridged multifractal
 // see "Texturing & Modeling, A Procedural Approach", Chapter 12
 float ridge(float h, float offset)
 {
-	h = abs(h);
-	h = offset - h;
-	h = h * h;
-	return h;
+    h = abs(h);
+    h = offset - h;
+    h = h * h;
+    return h;
 }
 
 // fractional Brownian motion
-// Inputs: 
+// Inputs:
 // p              position and approximate inter-pixel spacing
 // octaves        max # of octaves to calculate
 // lacunarity     frequency spacing between successive octaves
@@ -164,18 +177,18 @@ float ridge(float h, float offset)
 //
 float fBm(vec3 p, int octaves, float lacunarity, float gain)
 {
-	float sum = 0.0;
-	float freq = 1.0, amp = 1.0;
-	for(int i=0; i<octaves; i++) {
-	  vec3 seed = pow(1.0,float(i)) * p;
-	  sum += NoiseType(seed*freq,1) * amp;
-	  freq *= lacunarity; amp *= gain;
-	}
-	return sum;
+    float sum = 0.0;
+    float freq = 1.0, amp = 1.0;
+    for(int i=0; i<octaves; i++) {
+      vec3 seed = pow(1.0,float(i)) * p;
+      sum += NoiseType(seed*freq,1) * amp;
+      freq *= lacunarity; amp *= gain;
+    }
+    return sum;
 }
 
-// turbulence 
-// Inputs: 
+// turbulence
+// Inputs:
 // p              position and approximate inter-pixel spacing
 // octaves        max # of octaves to calculate
 // lacunarity     frequency spacing between successive octaves
@@ -183,18 +196,18 @@ float fBm(vec3 p, int octaves, float lacunarity, float gain)
 //
 float turbulence(vec3 p, int octaves, float lacunarity, float gain)
 {
-	float sum = 0.0;
-	float freq = 1.0, amp = 0.8;
-	for(int i=0; i<octaves; i++) {
-	  vec3 seed = pow(1.0,float(i)) * p;
-	  sum += abs(NoiseType(seed*freq,1)) * amp;
-	  freq *= lacunarity; amp *= gain;
-	}
-	return sum;
+    float sum = 0.0;
+    float freq = 1.0, amp = 0.8;
+    for(int i=0; i<octaves; i++) {
+      vec3 seed = pow(1.0,float(i)) * p;
+      sum += abs(NoiseType(seed*freq,1)) * amp;
+      freq *= lacunarity; amp *= gain;
+    }
+    return sum;
 }
 
 // inigo multi-fractal
-// Inputs: 
+// Inputs:
 // p              position and approximate inter-pixel spacing
 // octaves        max # of octaves to calculate
 // lacunarity     frequency spacing between successive octaves
@@ -202,19 +215,19 @@ float turbulence(vec3 p, int octaves, float lacunarity, float gain)
 //
 float iqmf(vec3 p, int octaves, float lacunarity, float gain)
 {
-	float sum = 0.0;
-	float freq = 1.0, amp = 1.0;
-	for(int i=0; i<octaves; i++) {
-	  vec3 seed = pow(1.0,float(i)) * p;
-	  vec4 n = PerlinSurflet3D_Deriv(seed*freq);
-	  sum += n.x / (1.0+dot(n.yzw,n.yzw)) * amp;
-	  freq *= lacunarity; amp *= gain;
-	}
-	return sum;
+    float sum = 0.0;
+    float freq = 1.0, amp = 1.0;
+    for(int i=0; i<octaves; i++) {
+      vec3 seed = pow(1.0,float(i)) * p;
+      vec4 n = PerlinSurflet3D_Deriv(seed*freq);
+      sum += n.x / (1.0+dot(n.yzw,n.yzw)) * amp;
+      freq *= lacunarity; amp *= gain;
+    }
+    return sum;
 }
 
 // ridged multi-fractal
-// Inputs: 
+// Inputs:
 // p              position and approximate inter-pixel spacing
 // octaves        max # of octaves to calculate
 // lacunarity     frequency spacing between successive octaves
@@ -223,153 +236,153 @@ float iqmf(vec3 p, int octaves, float lacunarity, float gain)
 //
 float ridgedmf(vec3 p, int octaves, float lacunarity, float gain, float offset)
 {
-	float sum = 0.0;
-	float freq = 1.0, amp = 1.0; float prev = 1.0;
-	for(int i=0; i<octaves; i++) {
-	  vec3 seed = pow(1.0,float(i)) * p;
-	  float n = ridge(NoiseType(seed*freq,1),offset);
-	  sum += n*amp*prev; prev = n; freq *= lacunarity; amp *= gain;
-	}
-	return sum;
+    float sum = 0.0;
+    float freq = 1.0, amp = 1.0; float prev = 1.0;
+    for(int i=0; i<octaves; i++) {
+      vec3 seed = pow(1.0,float(i)) * p;
+      float n = ridge(NoiseType(seed*freq,1),offset);
+      sum += n*amp*prev; prev = n; freq *= lacunarity; amp *= gain;
+    }
+    return sum;
 }
 
 // perlin noise
 vec4 DT3D_PerlinNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, float threshold, bool invert, int unsign, int modSet)
 {
-	// point position in object space
-	vec3 P = Po * frequency; 
+    // point position in object space
+    vec3 P = Po * frequency;
 
-	// call our perlin noise function
-	float perlin = NoiseType(P,modSet);
+    // call our perlin noise function
+    float perlin = NoiseType(P,modSet);
 
-	if(bool(unsign)) // unsign noise
-	{
-	 // range the perlin to 0.0 -> 1.0
-	 perlin = perlin*0.5+0.5;
-	}
+    if(bool(unsign)) // unsign noise
+    {
+     // range the perlin to 0.0 -> 1.0
+     perlin = perlin*0.5+0.5;
+    }
 
-	if(threshold > 0.0) // threshold 
-	{
-	  // threshold the perlin value
-	  perlin = pxslThreshold(threshold,perlin);
-	}
+    if(threshold > 0.0) // threshold
+    {
+      // threshold the perlin value
+      perlin = pxslThreshold(threshold,perlin);
+    }
 
-	if(invert) // invert the result 
-	{
-	  // invert the result
-	  perlin = 1.0 - perlin;
-	}
+    if(invert) // invert the result
+    {
+      // invert the result
+      perlin = 1.0 - perlin;
+    }
 
-	// final output color result
-	vec4 resultColor = mix( colorA, colorB, perlin);
+    // final output color result
+    vec4 resultColor = mix( colorA, colorB, perlin);
 
-	return resultColor;
+    return resultColor;
 }
 
 // brownian fractal noise
 vec4 DT3D_fBmNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert)
 {
-	// point position in object space
-	vec3 P = Po * frequency; 
+    // point position in object space
+    vec3 P = Po * frequency;
 
-	// call our noise noise function
-	float noise = fBm(P,octaves,lacunarity,gain) * 0.5+0.5;
+    // call our noise noise function
+    float noise = fBm(P,octaves,lacunarity,gain) * 0.5+0.5;
 
-	if(threshold > 0.0) // threshold 
-	{
-		// threshold the noise value
-		noise = pxslThreshold(threshold,noise);
-	}
+    if(threshold > 0.0) // threshold
+    {
+        // threshold the noise value
+        noise = pxslThreshold(threshold,noise);
+    }
 
-	if(invert) // invert the result 
-	{
-		// invert the result
-		noise = 1.0 - noise;
-	}
+    if(invert) // invert the result
+    {
+        // invert the result
+        noise = 1.0 - noise;
+    }
 
-	// final output color result
-	vec4 resultColor = mix( colorA, colorB, noise);
+    // final output color result
+    vec4 resultColor = mix( colorA, colorB, noise);
 
-	return resultColor;
+    return resultColor;
 }
 
 // turbulence fractal noise
 vec4 DT3D_TurbNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert)
 {
-	// point position in object space
-	vec3 P = Po * frequency; 
+    // point position in object space
+    vec3 P = Po * frequency;
 
-	// call our noise noise function
-	float noise = turbulence(P,octaves,lacunarity,gain);
+    // call our noise noise function
+    float noise = turbulence(P,octaves,lacunarity,gain);
 
-	if(threshold > 0.0) // threshold 
-	{
-		// threshold the noise value
-		noise = pxslThreshold(threshold,noise);
-	}
+    if(threshold > 0.0) // threshold
+    {
+        // threshold the noise value
+        noise = pxslThreshold(threshold,noise);
+    }
 
-	if(invert) // invert the result 
-	{
-		// invert the result
-		noise = 1.0 - noise;
-	}
+    if(invert) // invert the result
+    {
+        // invert the result
+        noise = 1.0 - noise;
+    }
 
-	// final output color result
-	vec4 resultColor = mix( colorA, colorB, noise);
+    // final output color result
+    vec4 resultColor = mix( colorA, colorB, noise);
 
-	return resultColor;
+    return resultColor;
 }
 
 // inigo multi fractal noise
 vec4 DT3D_InigoNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float threshold, bool invert)
 {
-	// point position in object space
-	vec3 P = Po * frequency; 
+    // point position in object space
+    vec3 P = Po * frequency;
 
-	// call our noise noise function
-	float noise = iqmf(P,octaves,lacunarity,gain)*0.5+0.5;
+    // call our noise noise function
+    float noise = iqmf(P,octaves,lacunarity,gain)*0.5+0.5;
 
-	if(threshold > 0.0) // threshold 
-	{
-		// threshold the noise value
-		noise = pxslThreshold(threshold,noise);
-	}
+    if(threshold > 0.0) // threshold
+    {
+        // threshold the noise value
+        noise = pxslThreshold(threshold,noise);
+    }
 
-	if(invert) // invert the result 
-	{
-		// invert the result
-		noise = 1.0 - noise;
-	}
+    if(invert) // invert the result
+    {
+        // invert the result
+        noise = 1.0 - noise;
+    }
 
-	// final output color result
-	vec4 resultColor = mix( colorA, colorB, noise);
+    // final output color result
+    vec4 resultColor = mix( colorA, colorB, noise);
 
-	return resultColor;
+    return resultColor;
 }
 
 // ridged multi fractal noise
 vec4 DT3D_RidgedNoise(vec3 Po, vec4 colorA, vec4 colorB, float frequency, int octaves, float lacunarity, float gain, float offset, float threshold, bool invert)
 {
-	// point position in object space
-	vec3 P = Po * frequency; 
+    // point position in object space
+    vec3 P = Po * frequency;
 
-	// call our noise noise function
-	float noise = ridgedmf(P,octaves,lacunarity,gain,offset)*0.5+0.5;
+    // call our noise noise function
+    float noise = ridgedmf(P,octaves,lacunarity,gain,offset)*0.5+0.5;
 
-	if(threshold > 0.0) // threshold 
-	{
-		// threshold the noise value
-		noise = pxslThreshold(threshold,noise);
-	}
+    if(threshold > 0.0) // threshold
+    {
+        // threshold the noise value
+        noise = pxslThreshold(threshold,noise);
+    }
 
-	if(invert) // invert the result 
-	{
-		// invert the result
-		noise = 1.0 - noise;
-	}
+    if(invert) // invert the result
+    {
+        // invert the result
+        noise = 1.0 - noise;
+    }
 
-	// final output color result
-	vec4 resultColor = mix( colorA, colorB, noise);
+    // final output color result
+    vec4 resultColor = mix( colorA, colorB, noise);
 
-	return resultColor;
+    return resultColor;
 }
